@@ -14,3 +14,40 @@ export type IUser = {
     };
   };
 };
+
+// Category Type
+export type Category = {
+  id: string;
+  name: string;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+};
+
+// Review Type
+export type Review = {
+  id: string;
+  rating: number; // e.g., 1 to 5
+  comment?: string;
+  userId: string;
+  gearId: string;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+};
+
+// Full GearItem Type (Matching your Prisma Schema)
+export type IGearItem = {
+  id: string;
+  name: string;
+  brand: string;
+  description: string;
+  image?: string; // Optional image URL (field name from backend)
+  pricePerDay: number | string; // Prisma Decimal returns as string or number in JSON
+  stock: number;
+  isAvailable: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  providerId: string;
+  categoryId: string;
+  category?: Category;
+  reviews?: Review[];
+};
