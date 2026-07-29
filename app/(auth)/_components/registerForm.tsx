@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, startTransition, useActionState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form"; // 👈 Controller ইমপোর্ট করা হয়েছে
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,8 +22,7 @@ export default function RegisterForm() {
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
+    control,
     formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -46,7 +45,7 @@ export default function RegisterForm() {
 
   const onSubmit = (data: RegisterFormData) => {
     const formData = new FormData();
-    formData.append("name", data.fullName); // Backend expects "name"
+    formData.append("name", data.fullName);
     formData.append("email", data.email);
     formData.append("role", data.role);
     if (data.phone) formData.append("phone", data.phone);
@@ -213,17 +212,21 @@ export default function RegisterForm() {
         )}
       </div>
 
-      {/* Terms Checkbox */}
+      {/* Terms Checkbox using Controller */}
       <div className="space-y-1 pt-2">
         <div className="flex items-start space-x-2">
-          <Checkbox
-            id="agreeTerms"
-            checked={watch("agreeTerms")}
-            onCheckedChange={(checked) =>
-              setValue("agreeTerms", !!checked, { shouldValidate: true })
-            }
-            disabled={isPending}
-            className="mt-1"
+          <Controller
+            name="agreeTerms"
+            control={control}
+            render={({ field }) => (
+              <Checkbox
+                id="agreeTerms"
+                checked={field.value}
+                onCheckedChange={field.onChange}
+                disabled={isPending}
+                className="mt-1"
+              />
+            )}
           />
           <Label
             htmlFor="agreeTerms"

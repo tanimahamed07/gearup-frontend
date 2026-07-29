@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -22,7 +21,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Dumbbell,
   Menu,
-  User,
   LayoutDashboard,
   LogOut,
   ShoppingBag,
@@ -30,23 +28,49 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { logout } from "@/service/logout";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-export default function Navbar() {
-  // 🔥 ডেমো ইউজার স্টেট (পরবর্তীতে আপনার Auth Hook/Context থেকে আসবে)
-  const [user, setUser] = useState<{
-    name: string;
-    email: string;
-    role: "USER" | "PROVIDER" | "ADMIN";
-    avatar?: string;
-  } | null>({
-    name: "Tanim Ahamed",
-    email: "tanim@gmail.com",
-    role: "PROVIDER", // পরীক্ষা করার জন্য 'USER', 'PROVIDER', বা 'ADMIN' বদলাতে পারেন
-  });
+export type UserData = {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  role: "CUSTOMER" | "PROVIDER" | "ADMIN";
+  avatar?: string;
+  status?: string;
+};
 
-  const handleLogout = () => {
-    // লগআউট লজিক এখানে যুক্ত হবে
-    setUser(null);
+interface NavbarProps {
+  user?: {
+    data?: UserData;
+    success?: boolean;
+    message?: string;
+  } | null;
+}
+
+export default function Navbar({ user: initialUser }: NavbarProps) {
+  const router = useRouter();
+  const user = initialUser?.data || null;
+
+  const handleLogout = async () => {
+    await logout();
+    toast.success("User Logged Out Successfully!");
+    router.push("/login");
+  };
+
+  // 🚀 Helper Function to determine dashboard route based on role
+  const getDashboardRoute = (role: UserData["role"]) => {
+    switch (role) {
+      case "ADMIN":
+        return "/admin";
+      case "PROVIDER":
+        return "/provider";
+      case "CUSTOMER":
+      default:
+        return "/customer";
+    }
   };
 
   const navLinks = [
@@ -56,7 +80,7 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 shadow-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-8">
         {/* 🏋️ Brand Logo */}
         <Link
@@ -86,7 +110,6 @@ export default function Navbar() {
 
         {/* 🔐 Right Section: Auth Actions / User Profile */}
         <div className="hidden md:flex items-center gap-4">
-          {/* Theme Toggle */}
           <ThemeToggle />
 
           {user ? (
@@ -99,7 +122,9 @@ export default function Navbar() {
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={user.avatar} alt={user.name} />
                     <AvatarFallback className="bg-primary/10 font-bold text-primary">
-                      {user.name.substring(0, 2).toUpperCase()}
+                      {user.name
+                        ? user.name.substring(0, 2).toUpperCase()
+                        : "U"}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -120,8 +145,18 @@ export default function Navbar() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
 
-                {/* Role Specific Actions */}
-                {user.role === "USER" && (
+                {/* 📊 Main Dashboard Link for all roles */}
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link
+                    href={getDashboardRoute(user.role)}
+                    className="flex items-center"
+                  >
+                    <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
+                  </Link>
+                </DropdownMenuItem>
+
+                {/* Role Specific Extra Actions */}
+                {user.role === "CUSTOMER" && (
                   <DropdownMenuItem asChild className="cursor-pointer">
                     <Link
                       href="/dashboard/user/orders"
@@ -133,31 +168,23 @@ export default function Navbar() {
                 )}
 
                 {user.role === "PROVIDER" && (
-                  <>
-                    <DropdownMenuItem asChild className="cursor-pointer">
-                      <Link
-                        href="/dashboard/provider"
-                        className="flex items-center"
-                      >
-                        <LayoutDashboard className="mr-2 h-4 w-4" /> Provider
-                        Dashboard
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild className="cursor-pointer">
-                      <Link
-                        href="/dashboard/provider/gears/add"
-                        className="flex items-center"
-                      >
-                        <PlusCircle className="mr-2 h-4 w-4" /> Add New Gear
-                      </Link>
-                    </DropdownMenuItem>
-                  </>
+                  <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link
+                      href="/dashboard/provider/gears/add"
+                      className="flex items-center"
+                    >
+                      <PlusCircle className="mr-2 h-4 w-4" /> Add New Gear
+                    </Link>
+                  </DropdownMenuItem>
                 )}
 
                 {user.role === "ADMIN" && (
                   <DropdownMenuItem asChild className="cursor-pointer">
-                    <Link href="/dashboard/admin" className="flex items-center">
-                      <ShieldCheck className="mr-2 h-4 w-4" /> Admin Panel
+                    <Link
+                      href="/dashboard/admin/settings"
+                      className="flex items-center"
+                    >
+                      <ShieldCheck className="mr-2 h-4 w-4" /> Admin Settings
                     </Link>
                   </DropdownMenuItem>
                 )}
@@ -185,7 +212,6 @@ export default function Navbar() {
 
         {/* 📱 Mobile Menu Trigger */}
         <div className="flex md:hidden items-center gap-2">
-          {/* Mobile Theme Toggle */}
           <ThemeToggle />
 
           <Sheet>
@@ -194,7 +220,7 @@ export default function Navbar() {
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px]">
+            <SheetContent side="right" className="w-75">
               <SheetHeader>
                 <SheetTitle className="flex items-center gap-2">
                   <Dumbbell className="h-6 w-6 text-primary" /> GearUp
@@ -219,7 +245,9 @@ export default function Navbar() {
                       <div className="flex items-center gap-3 mb-2">
                         <Avatar className="h-10 w-10">
                           <AvatarFallback className="bg-primary/10 font-bold text-primary">
-                            {user.name.substring(0, 2).toUpperCase()}
+                            {user.name
+                              ? user.name.substring(0, 2).toUpperCase()
+                              : "U"}
                           </AvatarFallback>
                         </Avatar>
                         <div>
@@ -234,7 +262,7 @@ export default function Navbar() {
                         variant="outline"
                         className="justify-start"
                       >
-                        <Link href={`/dashboard/${user.role.toLowerCase()}`}>
+                        <Link href={getDashboardRoute(user.role)}>
                           <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
                         </Link>
                       </Button>

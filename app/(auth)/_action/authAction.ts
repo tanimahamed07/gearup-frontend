@@ -69,13 +69,16 @@ export const loginAction = async (
       redirect(redirectTo);
     }
 
-    if (decodedToken.role === "CUSTOMER") {
-      redirect("/customer");
-    } else if (decodedToken.role === "PROVIDER") {
-      redirect("/provider");
-    } else if (decodedToken.role === "ADMIN") {
-      redirect("/admin");
+    if (decodedToken) {
+      redirect("/");
     }
+    // if (decodedToken.role === "CUSTOMER") {
+    //   redirect("/customer");
+    // } else if (decodedToken.role === "PROVIDER") {
+    //   redirect("/provider");
+    // } else if (decodedToken.role === "ADMIN") {
+    //   redirect("/admin");
+    // }
   }
 
   return result;
