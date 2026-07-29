@@ -14,6 +14,13 @@ type LoginState = {
   };
 };
 
+type ActionState = {
+  success: true;
+  statusCode: number;
+  message: string;
+  data: Record<string, unknown>;
+};
+
 export const loginAction = async (
   redirectTo: string,
   prevState: LoginState,
@@ -69,6 +76,41 @@ export const loginAction = async (
     } else if (decodedToken.role === "ADMIN") {
       redirect("/admin");
     }
+  }
+
+  return result;
+};
+
+export const registerAction = async (
+  prevState: ActionState,
+  formData: FormData,
+) => {
+  const name = formData.get("name");
+  const role = formData.get("role");
+  const phone = formData.get("phone");
+  const email = formData.get("email");
+  const password = formData.get("password");
+
+  const payload = {
+    name,
+    role,
+    phone,
+    email,
+    password,
+  };
+
+  const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const result = await res.json();
+
+  if (result.success) {
+    redirect("/login");
   }
 
   return result;

@@ -22,6 +22,10 @@ export const registerSchema = z
       .string()
       .min(1, "Email is required")
       .email("Invalid email address"),
+    phone: z.string().optional(),
+    role: z.enum(["CUSTOMER", "PROVIDER"], {
+      error: "Please select a role",
+    }),
     password: z
       .string()
       .min(1, "Password is required")
