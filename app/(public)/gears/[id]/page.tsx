@@ -10,39 +10,58 @@ import {
   Calendar,
   Share2,
   Heart,
+  Star,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { getGearDetails } from "../../_action/getGearById";
+import { getGearReview } from "@/service/review/getGearReview";
 
-// Mock/Dummy Data
-const mockGearItem = {
-  id: "gear-123456",
-  name: "Sony Alpha A7 IV Mirrorless Camera",
-  brand: "Sony",
-  image:
-    "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000&auto=format&fit=crop",
-  description:
-    "The Sony Alpha A7 IV is a versatile camera that goes beyond the basic. Delivering outstanding 33 MP still quality, 4K 60p video recording, refined handling, and fast focus performance, it is perfect for both professional photography and videography assignments.",
-  pricePerDay: 45.0,
-  stock: 3,
-  isAvailable: true,
-  category: {
-    id: "cat-1",
-    name: "Cameras",
-  },
-};
+// Integrated Components
+import { CreateReviewModal } from "@/components/review/CreateReviewModal";
+import { ReviewActions } from "@/components/review/ReviewActions";
 
-export default function GearDetails() {
-  // Real data-র বদলে Mock Data ব্যবহার করা হচ্ছে
-  const item = mockGearItem;
+export default async function GearDetails({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
 
+  const result = await getGearDetails(id);
+  const reviewRes = await getGearReview(id);
+
+  if (!result || !result?.data) {
+    return (
+      <div className="flex h-96 flex-col items-center justify-center text-center p-6">
+        <h2 className="text-2xl font-bold mb-2">Gear Not Found!</h2>
+        <p className="text-muted-foreground mb-4">
+          The gear item with ID{" "}
+          <strong className="text-foreground">{id}</strong> does not exist.
+        </p>
+        <Button asChild variant="outline">
+          <Link href="/gears">
+            <ArrowLeft className="mr-2 h-4 w-4" /> Back to All Gears
+          </Link>
+        </Button>
+      </div>
+    );
+  }
+
+  const item = result.data;
   const isAvailable = item.isAvailable && item.stock > 0;
+
+  // Review extraction safely
+  const reviewData = reviewRes?.data || {};
+  const reviewList = reviewData?.reviews || [];
+  const averageRating = reviewData?.averageRating || 0;
+  const totalReviews = reviewData?.totalReviews || 0;
 
   return (
     <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
+      <div className="container mx-auto px-4 py-8">
         {/* Back Button & Actions Bar */}
         <div className="mb-6 flex items-center justify-between">
           <Button
@@ -88,7 +107,7 @@ export default function GearDetails() {
                     priority
                     className="object-cover"
                     sizes="(max-width: 1024px) 100vw, 60vw"
-                    unoptimized={item.image.startsWith("http://localhost")}
+                    unoptimized={item.image.startsWith("http")}
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-muted-foreground/10">
@@ -144,6 +163,19 @@ export default function GearDetails() {
                 </span>
               </p>
 
+              {/* Quick Rating Header View */}
+              <div className="mt-2 flex items-center gap-2">
+                <div className="flex items-center text-amber-500">
+                  <Star className="h-4 w-4 fill-amber-500" />
+                  <span className="ml-1 text-sm font-semibold text-foreground">
+                    {averageRating}
+                  </span>
+                </div>
+                <span className="text-xs text-muted-foreground">
+                  ({totalReviews} {totalReviews === 1 ? "review" : "reviews"})
+                </span>
+              </div>
+
               {/* Price Box */}
               <div className="mt-6 flex items-baseline gap-1 rounded-lg border border-border/50 bg-muted/30 p-4">
                 <span className="text-3xl font-extrabold text-primary">
@@ -188,6 +220,120 @@ export default function GearDetails() {
               </Button>
             </div>
           </div>
+        </div>
+
+        {/* ======================================= */}
+        {/* REVIEWS SECTION                          */}
+        {/* ======================================= */}
+        <div className="mt-16 border-t border-border/60 pt-10">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight text-foreground">
+                Customer Reviews
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Read what others have to say about this gear
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-4">
+              {/* Overall Rating Overview Card */}
+              <div className="flex items-center gap-4 rounded-xl border border-border/60 bg-card p-3.5 shadow-sm">
+                <div className="flex items-center gap-2">
+                  <Star className="h-7 w-7 text-amber-500 fill-amber-500" />
+                  <span className="text-2xl font-extrabold text-foreground">
+                    {averageRating}
+                  </span>
+                </div>
+                <div className="border-l border-border pl-3.5">
+                  <div className="text-xs font-semibold text-foreground">
+                    Out of 5 Stars
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Based on {totalReviews} reviews
+                  </div>
+                </div>
+              </div>
+
+              {/* WRITE A REVIEW BUTTON */}
+              <CreateReviewModal gearId={id} />
+            </div>
+          </div>
+
+          {/* Review List Display */}
+          {reviewList.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {reviewList.map((rev: any, index: number) => (
+                <Card
+                  key={rev?._id || index}
+                  className="p-5 border border-border/60 bg-card shadow-sm space-y-3 flex flex-col justify-between"
+                >
+                  <div>
+                    {/* User Profile & Actions */}
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-sm">
+                          {rev?.user?.name
+                            ? rev.user.name.charAt(0).toUpperCase()
+                            : "U"}
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-semibold text-foreground leading-tight">
+                            {rev?.user?.name || "Anonymous User"}
+                          </h4>
+                          <span className="text-xs text-muted-foreground">
+                            {rev?.createdAt
+                              ? new Date(rev.createdAt).toLocaleDateString(
+                                  "en-US",
+                                  {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  },
+                                )
+                              : "Recently"}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* EDIT & DELETE DROPDOWN MODAL CONTROL */}
+                      <ReviewActions review={rev} />
+                    </div>
+
+                    {/* Star Rating Render */}
+                    <div className="flex items-center gap-0.5 mt-3">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`h-4 w-4 ${
+                            i < (rev?.rating || 0)
+                              ? "text-amber-500 fill-amber-500"
+                              : "text-muted border-muted fill-muted/30"
+                          }`}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Review Text Body */}
+                    <p className="mt-2 text-sm text-muted-foreground/90 leading-relaxed">
+                      {rev?.comment ||
+                        rev?.review ||
+                        "No detailed comment provided."}
+                    </p>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Card className="flex flex-col items-center justify-center p-8 text-center bg-muted/20 border-dashed">
+              <Star className="h-10 w-10 text-muted-foreground/30 mb-2" />
+              <h3 className="font-semibold text-foreground">No Reviews Yet</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Be the first to rent and review this gear!
+              </p>
+              <CreateReviewModal gearId={id} />
+            </Card>
+          )}
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { SlidersHorizontal } from "lucide-react";
 import { getCategory } from "../_action/getCategory";
 import CategoryFilter from "./CategoryFilter";
+import BrandFilter from "./BrandFilter";
 import PriceFilter from "./PriceFilter";
 import AvailabilityFilter from "./AvailabilityFilter";
 import ResetFiltersButton from "./ResetFiltersButton";
