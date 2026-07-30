@@ -42,7 +42,8 @@ export type UserData = {
   status?: string;
 };
 
-interface NavbarProps {
+
+export interface NavbarProps {
   user?: {
     data?: UserData;
     success?: boolean;
@@ -64,12 +65,12 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
   const getDashboardRoute = (role: UserData["role"]) => {
     switch (role) {
       case "ADMIN":
-        return "/admin";
+        return "/admin-dashboard";
       case "PROVIDER":
-        return "/provider";
+        return "/provider-dashboard";
       case "CUSTOMER":
       default:
-        return "/customer";
+        return "/customer-dashboard";
     }
   };
 
