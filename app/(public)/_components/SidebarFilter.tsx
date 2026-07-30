@@ -25,6 +25,9 @@ export default async function SidebarFilter() {
         {/* ✅ Category Filter Component */}
         <CategoryFilter categories={categories} />
 
+        {/* ✅ Brand Filter Component */}
+        <BrandFilter />
+
         {/* ✅ Price Range Filter Component */}
         <PriceFilter />
 

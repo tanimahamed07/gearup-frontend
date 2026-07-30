@@ -17,6 +17,10 @@ export const getAllGearItems = async ({
     params.set("category", query.category as string);
   }
 
+  if (query?.brand) {
+    params.set("brand", query.brand as string);
+  }
+
   if (query?.minPrice) {
     params.set("minPrice", query.minPrice as string);
   }

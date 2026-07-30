@@ -21,7 +21,15 @@ import { getGearReview } from "@/service/review/getGearReview";
 
 // Integrated Components
 import { CreateReviewModal } from "@/components/review/CreateReviewModal";
-import { ReviewActions } from "@/components/review/ReviewActions";
+import ReviewCard, { IReviewItem } from "@/components/review/ReviewCard";
+import RatingOverview from "@/components/review/RatingOverview";
+
+type IReview = {
+  comment: string;
+  rating: number;
+  customerId: string;
+  gearItemId: string;
+};
 
 export default async function GearDetails({
   params,
@@ -56,6 +64,7 @@ export default async function GearDetails({
   // Review extraction safely
   const reviewData = reviewRes?.data || {};
   const reviewList = reviewData?.reviews || [];
+  console.log(reviewList);
   const averageRating = reviewData?.averageRating || 0;
   const totalReviews = reviewData?.totalReviews || 0;
 
@@ -238,23 +247,11 @@ export default async function GearDetails({
 
             <div className="flex flex-wrap items-center gap-4">
               {/* Overall Rating Overview Card */}
-              <div className="flex items-center gap-4 rounded-xl border border-border/60 bg-card p-3.5 shadow-sm">
-                <div className="flex items-center gap-2">
-                  <Star className="h-7 w-7 text-amber-500 fill-amber-500" />
-                  <span className="text-2xl font-extrabold text-foreground">
-                    {averageRating}
-                  </span>
-                </div>
-                <div className="border-l border-border pl-3.5">
-                  <div className="text-xs font-semibold text-foreground">
-                    Out of 5 Stars
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    Based on {totalReviews} reviews
-                  </div>
-                </div>
-              </div>
 
+              <RatingOverview
+                averageRating={averageRating}
+                totalReviews={totalReviews}
+              ></RatingOverview>
               {/* WRITE A REVIEW BUTTON */}
               <CreateReviewModal gearId={id} />
             </div>
@@ -263,65 +260,8 @@ export default async function GearDetails({
           {/* Review List Display */}
           {reviewList.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {reviewList.map((rev: any, index: number) => (
-                <Card
-                  key={rev?._id || index}
-                  className="p-5 border border-border/60 bg-card shadow-sm space-y-3 flex flex-col justify-between"
-                >
-                  <div>
-                    {/* User Profile & Actions */}
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-sm">
-                          {rev?.user?.name
-                            ? rev.user.name.charAt(0).toUpperCase()
-                            : "U"}
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-semibold text-foreground leading-tight">
-                            {rev?.user?.name || "Anonymous User"}
-                          </h4>
-                          <span className="text-xs text-muted-foreground">
-                            {rev?.createdAt
-                              ? new Date(rev.createdAt).toLocaleDateString(
-                                  "en-US",
-                                  {
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                  },
-                                )
-                              : "Recently"}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* EDIT & DELETE DROPDOWN MODAL CONTROL */}
-                      <ReviewActions review={rev} />
-                    </div>
-
-                    {/* Star Rating Render */}
-                    <div className="flex items-center gap-0.5 mt-3">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-4 w-4 ${
-                            i < (rev?.rating || 0)
-                              ? "text-amber-500 fill-amber-500"
-                              : "text-muted border-muted fill-muted/30"
-                          }`}
-                        />
-                      ))}
-                    </div>
-
-                    {/* Review Text Body */}
-                    <p className="mt-2 text-sm text-muted-foreground/90 leading-relaxed">
-                      {rev?.comment ||
-                        rev?.review ||
-                        "No detailed comment provided."}
-                    </p>
-                  </div>
-                </Card>
+              {reviewList.map((rev: IReviewItem) => (
+                <ReviewCard key={rev?.id} rev={rev} />
               ))}
             </div>
           ) : (

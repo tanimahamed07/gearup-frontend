@@ -10,7 +10,7 @@ export type GearItem = {
   name: string;
   brand: string;
   description: string;
-  image?: string; // Image URL from backend
+  image?: string; 
   pricePerDay: number;
   stock: number;
   isAvailable: boolean;
