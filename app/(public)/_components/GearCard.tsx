@@ -28,14 +28,10 @@ export default function GearCard({ item }: { item: IGearItem }) {
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              unoptimized={item.image.startsWith("http://localhost")}
-              onError={(e) => {
-                console.error("Image failed to load:", item.image);
-                e.currentTarget.style.display = "none";
-              }}
+              unoptimized
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-muted-foreground/10">
+            <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-muted to-muted-foreground/10">
               <Package className="h-12 w-12 text-muted-foreground/40" />
             </div>
           )}
