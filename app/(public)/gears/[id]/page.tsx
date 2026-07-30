@@ -23,6 +23,7 @@ import { getGearReview } from "@/service/review/getGearReview";
 import { CreateReviewModal } from "@/components/review/CreateReviewModal";
 import ReviewCard, { IReviewItem } from "@/components/review/ReviewCard";
 import RatingOverview from "@/components/review/RatingOverview";
+import BookingModal from "../../_components/BookingModal";
 
 type IReview = {
   comment: string;
@@ -220,13 +221,12 @@ export default async function GearDetails({
 
             {/* Action Section */}
             <div className="mt-8 border-t border-border/60 pt-4">
-              <Button
-                size="lg"
-                className="w-full text-sm font-semibold shadow-md transition-all h-11"
-                disabled={!isAvailable}
-              >
-                {isAvailable ? "Book This Gear" : "Currently Unavailable"}
-              </Button>
+              {/* 👈 ২. স্ট্যাটিক বাটনের জায়গায় Dynamic BookingModal যুক্ত করা হলো */}
+              <BookingModal
+                gearItemId={item.id}
+                pricePerDay={Number(item.pricePerDay)}
+                isAvailable={isAvailable}
+              />
             </div>
           </div>
         </div>
@@ -247,11 +247,10 @@ export default async function GearDetails({
 
             <div className="flex flex-wrap items-center gap-4">
               {/* Overall Rating Overview Card */}
-
               <RatingOverview
                 averageRating={averageRating}
                 totalReviews={totalReviews}
-              ></RatingOverview>
+              />
               {/* WRITE A REVIEW BUTTON */}
               <CreateReviewModal gearId={id} />
             </div>
