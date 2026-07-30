@@ -9,10 +9,8 @@ export default async function GearList({
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const query = searchParams ? await searchParams : {};
-  console.log("🔎 Search query:", query);
 
   const gears = await getAllGearItems({ query });
-  console.log("📦 Gears received:", gears.data?.length || 0);
 
   // Handle empty or error states
   if (!gears?.data || gears.data.length === 0) {

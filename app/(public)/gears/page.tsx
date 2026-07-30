@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import GearList from "../_components/GearList";
 import SearchBar from "../_components/SearchBar";
+import SidebarFilter from "../_components/SidebarFilter";
 
 // Types based on your Prisma Model
 export type GearItem = {
@@ -45,9 +46,10 @@ export default function GearPage({
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
         {/* 🎛️ Sidebar Filter Controls */}
+        <SidebarFilter />
 
         {/* 📦 Gear Items Grid */}
-        <main className="lg:col-span-4">
+        <main className="lg:col-span-3">
           <Suspense
             fallback={
               <div className="flex h-64 items-center justify-center">
