@@ -225,6 +225,7 @@ export default async function GearDetails({
               <BookingModal
                 gearItemId={item.id}
                 pricePerDay={Number(item.pricePerDay)}
+                stock={item.stock} // 👈 স্টক পাস করা হলো
                 isAvailable={isAvailable}
               />
             </div>
