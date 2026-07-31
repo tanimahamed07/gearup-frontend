@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Package } from "lucide-react";
+import { Plus, Package, Edit3 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,7 @@ import {
   type GearFormData,
 } from "@/lib/validations/gear.schema";
 import { postGearItem } from "../_action/postGearItem";
+import { updateGearItem } from "../_action/updateGearItem"; // Update path as per your folder structure
 
 export type ICategory = {
   id: string;
@@ -41,12 +42,14 @@ export type ICategory = {
 interface GearFormDialogProps {
   categories: ICategory[];
   mode?: "create" | "edit";
+  gearId?: string;
   initialData?: Partial<GearFormData>;
 }
 
 export function GearFormDialog({
   categories = [],
   mode = "create",
+  gearId,
   initialData,
 }: GearFormDialogProps) {
   const [open, setOpen] = useState(false);
@@ -63,7 +66,7 @@ export function GearFormDialog({
       name: initialData?.name || "",
       brand: initialData?.brand || "",
       categoryId: initialData?.categoryId || "",
-      pricePerDay: (initialData?.pricePerDay as number) || 0,
+      pricePerDay: Number(initialData?.pricePerDay) || 0,
       stock: initialData?.stock || 1,
       image: initialData?.image || "",
       description: initialData?.description || "",
@@ -73,7 +76,6 @@ export function GearFormDialog({
   const onSubmit = async (values: GearFormData) => {
     try {
       if (mode === "create") {
-        // Type assertion to match IGearItem structure
         const res = await postGearItem(
           values as unknown as import("@/lib/types/types").IGearItem,
         );
@@ -85,8 +87,18 @@ export function GearFormDialog({
         } else {
           toast.error(res?.message || "Failed to create gear item.");
         }
-      } else {
-        // TODO: Update gear action handle logic
+      } else if (mode === "edit" && gearId) {
+        const res = await updateGearItem(
+          gearId,
+          values as unknown as import("@/lib/types/types").IGearItem,
+        );
+
+        if (res?.success) {
+          toast.success("Gear item updated successfully!");
+          setOpen(false);
+        } else {
+          toast.error(res?.message || "Failed to update gear item.");
+        }
       }
     } catch (error) {
       console.error("Form submission error:", error);
@@ -96,7 +108,7 @@ export function GearFormDialog({
 
   const handleOpenChange = (newOpenState: boolean) => {
     setOpen(newOpenState);
-    if (!newOpenState) {
+    if (!newOpenState && mode === "create") {
       reset();
     }
   };
@@ -104,19 +116,26 @@ export function GearFormDialog({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="gap-2 shadow-sm rounded-lg">
-          <Plus className="h-4 w-4" /> Add New Gear
-        </Button>
+        {mode === "create" ? (
+          <Button className="gap-2 shadow-sm rounded-lg">
+            <Plus className="h-4 w-4" /> Add New Gear
+          </Button>
+        ) : (
+          <button className="flex w-full items-center px-2 py-1.5 text-sm cursor-pointer hover:bg-muted rounded-sm">
+            <Edit3 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            Edit Details
+          </button>
+        )}
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-137.5 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold flex items-center gap-2">
             <Package className="h-5 w-5 text-primary" />
             {mode === "create" ? "Add New Gear" : "Edit Gear Details"}
           </DialogTitle>
           <DialogDescription>
-            Provide details about the equipment to list it for rental in your
+            Provide details about the equipment to list or update it in your
             inventory.
           </DialogDescription>
         </DialogHeader>

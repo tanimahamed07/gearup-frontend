@@ -42,7 +42,6 @@ export type UserData = {
   status?: string;
 };
 
-
 export interface NavbarProps {
   user?: {
     data?: UserData;

@@ -24,18 +24,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { GearFormDialog } from "../../_component/GearFormDialog";
 import { getCategory } from "@/app/(public)/_action/getCategory";
 import { ICategory } from "@/lib/types/types";
-
+import { GearActionMenu } from "../../_component/GearActionMenu";
 
 export interface IGearItem {
   id: string;
@@ -54,12 +47,12 @@ export interface IGearItem {
 }
 
 export default async function ManageInventory() {
-const res = await getProviderGearList();
+  const res = await getProviderGearList();
   const gears: IGearItem[] = res?.data || [];
   const response = await getCategory();
   const categories: ICategory[] = response?.data || [];
 
-  console.log(categories)
+  console.log(categories);
 
   // Calculate Overview Stats
   const totalItems = gears.length;
@@ -84,7 +77,7 @@ const res = await getProviderGearList();
         </div>
 
         {/* Modal Trigger Component */}
-        <GearFormDialog categories={categories}  mode="create" />
+        <GearFormDialog categories={categories} mode="create" />
       </div>
 
       {/* Quick Inventory Stats */}
@@ -183,12 +176,12 @@ const res = await getProviderGearList();
               <Table>
                 <TableHeader className="bg-muted/30">
                   <TableRow>
-                    <TableHead className="w-[300px]">Gear Info</TableHead>
-                    <TableHead className="w-[140px]">Category</TableHead>
-                    <TableHead className="w-[110px]">Daily Rate</TableHead>
-                    <TableHead className="w-[100px]">Stock</TableHead>
-                    <TableHead className="w-[130px]">Status</TableHead>
-                    <TableHead className="text-right w-[80px]">
+                    <TableHead className="w-75">Gear Info</TableHead>
+                    <TableHead className="w-35">Category</TableHead>
+                    <TableHead className="w-27.5">Daily Rate</TableHead>
+                    <TableHead className="w-25">Stock</TableHead>
+                    <TableHead className="w-32.5">Status</TableHead>
+                    <TableHead className="text-right w-20">
                       Actions
                     </TableHead>
                   </TableRow>
@@ -275,39 +268,7 @@ const res = await getProviderGearList();
                       </TableCell>
 
                       <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 rounded-lg"
-                            >
-                              <MoreVertical className="h-4 w-4 text-muted-foreground" />
-                              <span className="sr-only">Actions</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-40">
-                            <DropdownMenuLabel className="text-xs text-muted-foreground">
-                              Manage Gear
-                            </DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              asChild
-                              className="cursor-pointer"
-                            >
-                              <Link
-                                href={`/provider-dashboard/inventory/edit/${gear.id}`}
-                              >
-                                <Edit3 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                                Edit Details
-                              </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="text-rose-600 focus:text-rose-600 cursor-pointer">
-                              <Trash2 className="h-3.5 w-3.5 mr-2" />
-                              Delete Gear
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <GearActionMenu gear={gear} categories={categories} />
                       </TableCell>
                     </TableRow>
                   ))}
