@@ -19,7 +19,7 @@ export type IUser = {
 };
 
 // Category Type
-export type Category = {
+export type ICategory = {
   id: string;
   name: string;
   createdAt?: Date | string;
@@ -51,7 +51,7 @@ export type IGearItem = {
   updatedAt?: Date | string;
   providerId: string;
   categoryId: string;
-  category?: Category;
+  category?: ICategory;
   reviews?: Review[];
 };
 
@@ -62,3 +62,5 @@ export type ISidebarItem = {
     Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
   >;
 };
+
+

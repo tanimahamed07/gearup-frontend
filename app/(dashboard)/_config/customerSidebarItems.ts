@@ -1,4 +1,10 @@
-import { LayoutDashboard, Settings, ShoppingBag, Star } from "lucide-react";
+import {
+  CreditCard,
+  LayoutDashboard,
+  Settings,
+  ShoppingBag,
+  Star,
+} from "lucide-react";
 import { ADMIN_SIDEBAR_ITEMS } from "./adminSidebarItems";
 import { ISidebarItem } from "@/lib/types/types";
 import { PROVIDER_SIDEBAR_ITEMS } from "./providerSidebarItems";
@@ -15,9 +21,9 @@ const CUSTOMER_SIDEBAR_ITEMS: ISidebarItem[] = [
     icon: ShoppingBag,
   },
   {
-    name: "My Reviews",
-    href: "/customer-dashboard/reviews",
-    icon: Star,
+    name: "Payment History",
+    href: "/customer-dashboard/payments",
+    icon: CreditCard,
   },
   {
     name: "Settings",
