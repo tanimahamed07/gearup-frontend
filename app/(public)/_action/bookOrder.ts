@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 export interface TRentalOrderItem {
@@ -27,5 +28,13 @@ export const bookOrder = async (payload: TRentalOrderPayload) => {
   });
 
   const data = await res.json();
+  if (data.success) {
+    revalidateTag("gear-details", {
+      expire: 0,
+    });
+    revalidateTag("gear-details", {
+      expire: 0,
+    });
+  }
   return data;
 };

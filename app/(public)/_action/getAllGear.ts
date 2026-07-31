@@ -43,7 +43,10 @@ export const getAllGearItems = async ({
     headers: {
       "Content-Type": "application/json",
     },
-    cache: "no-store",
+    next: {
+      revalidate: 3600,
+      tags: ["gears"],
+    },
   });
 
   const data = await res.json();
