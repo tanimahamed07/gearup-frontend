@@ -1,6 +1,14 @@
 import React from "react";
 import { format } from "date-fns";
-import { Users, Shield, Mail, Phone, Calendar } from "lucide-react";
+import {
+  Users,
+  Mail,
+  Phone,
+  Calendar,
+  Sparkles,
+  CheckCircle2,
+  XCircle,
+} from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,79 +36,54 @@ export interface IUser {
 
 export default async function UserManagementPage() {
   const result = await getAllUsers();
-  // Fixed bitwise OR bug here
   const users: IUser[] = result?.data || [];
 
-  // Overview Stats
-  const totalUsers = users.length;
-  const activeUsers = users.filter((u) => u.status === "ACTIVE").length;
-  const providersCount = users.filter((u) => u.role === "PROVIDER").length;
+
+  // Role Badge Helper
+  const getRoleBadge = (role: IUser["role"]) => {
+    switch (role) {
+      case "ADMIN":
+        return (
+          <Badge className="bg-purple-500/15 text-purple-700 dark:text-purple-400 border-purple-500/30 whitespace-nowrap font-semibold text-[11px]">
+            ADMIN
+          </Badge>
+        );
+      case "PROVIDER":
+        return (
+          <Badge className="bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/30 whitespace-nowrap font-semibold text-[11px]">
+            PROVIDER
+          </Badge>
+        );
+      default:
+        return (
+          <Badge
+            variant="outline"
+            className="text-muted-foreground whitespace-nowrap font-semibold text-[11px]"
+          >
+            CUSTOMER
+          </Badge>
+        );
+    }
+  };
 
   return (
-    <div className="space-y-6 p-4 sm:p-8 max-w-7xl mx-auto">
+    <div className="space-y-6 w-full max-w-full min-w-0">
       {/* Page Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          User Management
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Manage system users, view account roles, and update account statuses.
-        </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
+            User Management
+            <Sparkles className="h-5 w-5 text-amber-500 fill-amber-500/20" />
+          </h1>
+          <p className="text-xs md:text-sm text-muted-foreground mt-1">
+            Manage system users, view account roles, and update account statuses
+          </p>
+        </div>
       </div>
 
-      {/* Top Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="border border-border/60 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Total Registered Users
-            </CardTitle>
-            <div className="p-2 rounded-lg bg-primary/10 text-primary">
-              <Users className="h-4 w-4" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-black text-foreground">
-              {totalUsers}
-            </div>
-          </CardContent>
-        </Card>
 
-        <Card className="border border-border/60 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Active Accounts
-            </CardTitle>
-            <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-500">
-              <Shield className="h-4 w-4" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-black text-foreground">
-              {activeUsers}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-border/60 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Providers
-            </CardTitle>
-            <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500">
-              <Users className="h-4 w-4" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-black text-foreground">
-              {providersCount}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Users Table */}
-      <Card className="border border-border/60 shadow-sm overflow-hidden">
+      {/* Main Users Table Card */}
+      <Card className="border border-border/60 shadow-sm rounded-xl overflow-hidden bg-card">
         <CardHeader className="border-b border-border/40 bg-muted/20 px-6 py-4">
           <CardTitle className="text-base font-semibold flex items-center gap-2">
             <Users className="h-5 w-5 text-primary" />
@@ -110,35 +93,48 @@ export default async function UserManagementPage() {
 
         <CardContent className="p-0">
           {users.length > 0 ? (
+            /* Overflow wrapper for smooth mobile horizontal scrolling */
             <div className="overflow-x-auto">
-              <Table>
-                <TableHeader className="bg-muted/30">
-                  <TableRow>
-                    <TableHead className="w-56">User Details</TableHead>
-                    <TableHead className="w-48">Contact</TableHead>
-                    <TableHead className="w-32">Role</TableHead>
-                    <TableHead className="w-36">Joined Date</TableHead>
-                    <TableHead className="w-28">Status</TableHead>
-                    <TableHead className="w-36 text-right">Action</TableHead>
+              <Table className="min-w-[900px]">
+                <TableHeader className="bg-muted/40">
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="w-[260px] whitespace-nowrap pl-6">
+                      User Details
+                    </TableHead>
+                    <TableHead className="w-[220px] whitespace-nowrap">
+                      Contact
+                    </TableHead>
+                    <TableHead className="w-[120px] whitespace-nowrap">
+                      Role
+                    </TableHead>
+                    <TableHead className="w-[160px] whitespace-nowrap">
+                      Joined Date
+                    </TableHead>
+                    <TableHead className="w-[140px] whitespace-nowrap">
+                      Status
+                    </TableHead>
+                    <TableHead className="text-right whitespace-nowrap pr-6 w-[160px]">
+                      Action
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {users.map((user) => (
                     <TableRow
                       key={user.id}
-                      className="hover:bg-muted/30 transition-colors"
+                      className="hover:bg-muted/40 transition-colors"
                     >
                       {/* Name & Avatar */}
-                      <TableCell>
+                      <TableCell className="whitespace-nowrap pl-6">
                         <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm shrink-0 uppercase">
+                          <div className="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-extrabold text-xs shrink-0 uppercase border border-primary/20">
                             {user.name?.[0] || "U"}
                           </div>
-                          <div>
-                            <p className="font-semibold text-sm text-foreground">
+                          <div className="space-y-0.5 max-w-[180px]">
+                            <p className="font-bold text-sm text-foreground line-clamp-1">
                               {user.name}
                             </p>
-                            <p className="text-xs text-muted-foreground font-mono">
+                            <p className="text-[11px] text-muted-foreground font-mono">
                               ID: {user.id.slice(0, 8)}...
                             </p>
                           </div>
@@ -146,10 +142,10 @@ export default async function UserManagementPage() {
                       </TableCell>
 
                       {/* Contact Info */}
-                      <TableCell>
-                        <div className="space-y-1 text-xs">
-                          <div className="flex items-center gap-1.5 text-muted-foreground">
-                            <Mail className="h-3.5 w-3.5 shrink-0" />
+                      <TableCell className="whitespace-nowrap">
+                        <div className="space-y-1 text-xs font-medium">
+                          <div className="flex items-center gap-1.5 text-foreground">
+                            <Mail className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                             <span className="truncate max-w-[180px]">
                               {user.email}
                             </span>
@@ -164,46 +160,37 @@ export default async function UserManagementPage() {
                       </TableCell>
 
                       {/* User Role Badge */}
-                      <TableCell>
-                        <Badge
-                          variant="outline"
-                          className={`font-semibold text-[11px] ${
-                            user.role === "ADMIN"
-                              ? "bg-purple-500/10 text-purple-600 border-purple-200"
-                              : user.role === "PROVIDER"
-                                ? "bg-blue-500/10 text-blue-600 border-blue-200"
-                                : "bg-gray-500/10 text-gray-600 border-gray-200"
-                          }`}
-                        >
-                          {user.role}
-                        </Badge>
+                      <TableCell className="whitespace-nowrap">
+                        {getRoleBadge(user.role)}
                       </TableCell>
 
                       {/* Created At */}
-                      <TableCell className="text-xs text-muted-foreground">
-                        <div className="flex items-center gap-1.5">
-                          <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                          {user.createdAt
-                            ? format(new Date(user.createdAt), "MMM dd, yyyy")
-                            : "N/A"}
+                      <TableCell className="whitespace-nowrap">
+                        <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+                          <Calendar className="h-3.5 w-3.5 text-primary shrink-0" />
+                          <span>
+                            {user.createdAt
+                              ? format(new Date(user.createdAt), "MMM dd, yyyy")
+                              : "N/A"}
+                          </span>
                         </div>
                       </TableCell>
 
                       {/* Status Badge */}
-                      <TableCell>
+                      <TableCell className="whitespace-nowrap">
                         {user.status === "ACTIVE" ? (
-                          <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 font-medium">
-                            ACTIVE
+                          <Badge className="gap-1 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/25 border border-emerald-500/30 whitespace-nowrap">
+                            <CheckCircle2 className="h-3 w-3" /> ACTIVE
                           </Badge>
                         ) : (
-                          <Badge className="bg-red-500/15 text-red-700 dark:text-red-400 border-red-500/30 font-medium">
-                            SUSPENDED
+                          <Badge className="gap-1 bg-red-500/15 text-red-700 dark:text-red-400 hover:bg-red-500/25 border border-red-500/30 whitespace-nowrap">
+                            <XCircle className="h-3 w-3" /> SUSPENDED
                           </Badge>
                         )}
                       </TableCell>
 
                       {/* Update Status Dropdown */}
-                      <TableCell className="text-right">
+                      <TableCell className="text-right whitespace-nowrap pr-6">
                         <UserStatusSelect
                           userId={user.id}
                           currentStatus={user.status}
@@ -215,8 +202,15 @@ export default async function UserManagementPage() {
               </Table>
             </div>
           ) : (
-            <div className="text-center py-12 text-muted-foreground">
-              No users found.
+            /* Empty State */
+            <div className="flex flex-col items-center justify-center p-12 text-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-4 shadow-inner">
+                <Users className="h-8 w-8" />
+              </div>
+              <h3 className="text-lg font-bold mb-1">No users found</h3>
+              <p className="text-sm text-muted-foreground max-w-sm">
+                There are no user accounts registered in the platform yet.
+              </p>
             </div>
           )}
         </CardContent>

@@ -3,10 +3,10 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   Package,
-  Layers,
-  CheckCircle2,
-  AlertTriangle,
   ExternalLink,
+  Sparkles,
+  CheckCircle2,
+  XCircle,
 } from "lucide-react";
 
 import { getProviderGearList } from "../../_action/providerGearList";
@@ -25,7 +25,6 @@ import { GearFormDialog } from "../../_component/GearFormDialog";
 import { getCategory } from "@/app/(public)/_action/getCategory";
 import { ICategory } from "@/lib/types/types";
 import { GearActionMenu } from "../../_component/GearActionMenu";
-import { deleteGearItem } from "../../_action/deleteGearItem";
 
 export interface IGearItem {
   id: string;
@@ -49,30 +48,17 @@ export default async function ManageInventory() {
   const response = await getCategory();
   const categories: ICategory[] = response?.data || [];
 
-
-
-
-  console.log(categories);
-
-  // Calculate Overview Stats
-  const totalItems = gears.length;
-  const activeItems = gears.filter((g) => g.isAvailable).length;
-  const outOfStockItems = gears.filter((g) => g.stock === 0).length;
-  const totalStockUnits = gears.reduce(
-    (acc, curr) => acc + Number(curr.stock || 0),
-    0,
-  );
-
   return (
-    <div className="space-y-6 p-4 sm:p-8 max-w-7xl mx-auto">
-      {/* Header with Encapsulated Dialog */}
+    <div className="space-y-6 w-full max-w-full min-w-0">
+      {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
             Inventory Management
+            <Sparkles className="h-5 w-5 text-amber-500 fill-amber-500/20" />
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Manage your rental gears, update stock levels, and add new items.
+          <p className="text-xs md:text-sm text-muted-foreground mt-1">
+            Manage your rental gears, update stock levels, and add new items
           </p>
         </div>
 
@@ -80,108 +66,38 @@ export default async function ManageInventory() {
         <GearFormDialog categories={categories} mode="create" />
       </div>
 
-      {/* Quick Inventory Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="border border-border/60 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Total Gear Items
-            </CardTitle>
-            <div className="p-2 rounded-lg bg-primary/10 text-primary">
-              <Package className="h-4 w-4" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-black text-foreground">
-              {totalItems}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Unique products listed
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-border/60 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Available For Rent
-            </CardTitle>
-            <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-500">
-              <CheckCircle2 className="h-4 w-4" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-black text-foreground">
-              {activeItems}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Active on marketplace
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-border/60 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Total Units Stock
-            </CardTitle>
-            <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500">
-              <Layers className="h-4 w-4" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-black text-foreground">
-              {totalStockUnits}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Units available in total
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-border/60 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Out of Stock
-            </CardTitle>
-            <div className="p-2 rounded-lg bg-amber-500/10 text-amber-500">
-              <AlertTriangle className="h-4 w-4" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-black text-foreground">
-              {outOfStockItems}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Requires restocking
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Main Inventory Table */}
-      <Card className="border border-border/60 shadow-sm overflow-hidden">
+      {/* Main Inventory Table Card */}
+      <Card className="border border-border/60 shadow-sm rounded-xl overflow-hidden bg-card">
         <CardHeader className="border-b border-border/40 bg-muted/20 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-base font-semibold flex items-center gap-2">
-              <Package className="h-5 w-5 text-primary" />
-              All Inventory Items ({gears.length})
-            </CardTitle>
-          </div>
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <Package className="h-5 w-5 text-primary" />
+            All Inventory Items ({gears.length})
+          </CardTitle>
         </CardHeader>
 
         <CardContent className="p-0">
           {gears.length > 0 ? (
+            /* Overflow wrapper for smooth mobile horizontal scrolling */
             <div className="overflow-x-auto">
-              <Table>
-                <TableHeader className="bg-muted/30">
-                  <TableRow>
-                    <TableHead className="w-75">Gear Info</TableHead>
-                    <TableHead className="w-35">Category</TableHead>
-                    <TableHead className="w-27.5">Daily Rate</TableHead>
-                    <TableHead className="w-25">Stock</TableHead>
-                    <TableHead className="w-32.5">Status</TableHead>
-                    <TableHead className="text-right w-20">
+              <Table className="min-w-[800px]">
+                <TableHeader className="bg-muted/40">
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="w-[300px] whitespace-nowrap pl-6">
+                      Gear Info
+                    </TableHead>
+                    <TableHead className="w-[160px] whitespace-nowrap">
+                      Category
+                    </TableHead>
+                    <TableHead className="w-[140px] whitespace-nowrap">
+                      Daily Rate
+                    </TableHead>
+                    <TableHead className="w-[120px] whitespace-nowrap">
+                      Stock
+                    </TableHead>
+                    <TableHead className="w-[140px] whitespace-nowrap">
+                      Status
+                    </TableHead>
+                    <TableHead className="text-right whitespace-nowrap pr-6 w-[100px]">
                       Actions
                     </TableHead>
                   </TableRow>
@@ -190,11 +106,12 @@ export default async function ManageInventory() {
                   {gears.map((gear) => (
                     <TableRow
                       key={gear.id}
-                      className="hover:bg-muted/30 transition-colors"
+                      className="hover:bg-muted/40 transition-colors"
                     >
-                      <TableCell>
+                      {/* Gear Info */}
+                      <TableCell className="whitespace-nowrap pl-6">
                         <div className="flex items-center gap-3">
-                          <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-muted border shrink-0">
+                          <div className="relative h-11 w-11 rounded-lg overflow-hidden bg-muted border border-border/80 shrink-0">
                             <Image
                               src={gear.image || "/placeholder.png"}
                               alt={gear.name}
@@ -203,10 +120,10 @@ export default async function ManageInventory() {
                               unoptimized
                             />
                           </div>
-                          <div className="space-y-0.5 max-w-50 sm:max-w-60">
+                          <div className="space-y-0.5 max-w-[200px] sm:max-w-xs">
                             <Link
                               href={`/gears/${gear.id}`}
-                              className="font-semibold text-sm text-foreground hover:text-primary transition-colors line-clamp-1 flex items-center gap-1 group"
+                              className="font-bold text-sm text-foreground hover:text-primary transition-colors line-clamp-1 flex items-center gap-1 group"
                             >
                               {gear.name}
                               <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground" />
@@ -218,28 +135,30 @@ export default async function ManageInventory() {
                         </div>
                       </TableCell>
 
-                      <TableCell>
-                        <Badge
-                          variant="secondary"
-                          className="bg-muted/60 text-muted-foreground border border-border/40 font-normal rounded-md"
-                        >
+                      {/* Category */}
+                      <TableCell className="whitespace-nowrap">
+                        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground bg-secondary px-2.5 py-1 rounded">
                           {gear.category?.name || "N/A"}
-                        </Badge>
-                      </TableCell>
-
-                      <TableCell>
-                        <span className="font-semibold text-sm text-foreground">
-                          ${Number(gear.pricePerDay).toFixed(2)}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground block">
-                          / day
                         </span>
                       </TableCell>
 
-                      <TableCell>
+                      {/* Daily Rate */}
+                      <TableCell className="whitespace-nowrap">
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-sm font-extrabold text-foreground tracking-tight">
+                            ${Number(gear.pricePerDay).toFixed(2)}
+                          </span>
+                          <span className="text-[11px] text-muted-foreground font-medium">
+                            / day
+                          </span>
+                        </div>
+                      </TableCell>
+
+                      {/* Stock */}
+                      <TableCell className="whitespace-nowrap">
                         <div className="flex items-center gap-1.5">
                           <span
-                            className={`font-semibold text-sm ${
+                            className={`text-xs font-extrabold ${
                               gear.stock === 0
                                 ? "text-rose-500"
                                 : "text-foreground"
@@ -247,27 +166,27 @@ export default async function ManageInventory() {
                           >
                             {gear.stock}
                           </span>
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-xs text-muted-foreground font-medium">
                             units
                           </span>
                         </div>
                       </TableCell>
 
-                      <TableCell>
+                      {/* Status Badge */}
+                      <TableCell className="whitespace-nowrap">
                         {gear.isAvailable && gear.stock > 0 ? (
-                          <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20 font-medium">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse" />
-                            Active
+                          <Badge className="gap-1 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/25 border border-emerald-500/30 whitespace-nowrap">
+                            <CheckCircle2 className="h-3 w-3" /> Active
                           </Badge>
                         ) : (
-                          <Badge className="bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/30 hover:bg-rose-500/20 font-medium">
-                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 mr-1.5" />
-                            Unavailable
+                          <Badge className="gap-1 bg-red-500/15 text-red-700 dark:text-red-400 hover:bg-red-500/25 border border-red-500/30 whitespace-nowrap">
+                            <XCircle className="h-3 w-3" /> Unavailable
                           </Badge>
                         )}
                       </TableCell>
 
-                      <TableCell className="text-right">
+                      {/* Action Menu */}
+                      <TableCell className="text-right whitespace-nowrap pr-6">
                         <GearActionMenu gear={gear} categories={categories} />
                       </TableCell>
                     </TableRow>
@@ -278,12 +197,10 @@ export default async function ManageInventory() {
           ) : (
             /* Empty State */
             <div className="flex flex-col items-center justify-center p-12 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted mb-4">
-                <Package className="h-8 w-8 text-muted-foreground" />
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-4 shadow-inner">
+                <Package className="h-8 w-8" />
               </div>
-              <h3 className="text-lg font-semibold mb-1">
-                No gears in inventory
-              </h3>
+              <h3 className="text-lg font-bold mb-1">No gears in inventory</h3>
               <p className="text-sm text-muted-foreground max-w-sm mb-6">
                 You haven&apos;t added any gear items for rent yet. Start
                 listing your items to get bookings!

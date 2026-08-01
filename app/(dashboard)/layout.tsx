@@ -35,7 +35,7 @@ export default async function DashboardLayout({
   const user = userResponse?.data || null;
 
   // Calculate user role
-  const role: UserRole = (user?.role as UserRole);
+  const role: UserRole = user?.role as UserRole;
 
   // Calculate user initials
   const userInitials = user?.name
@@ -51,7 +51,8 @@ export default async function DashboardLayout({
   const navItems = sidebarMenuItems[role] || sidebarMenuItems.CUSTOMER;
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
+    // overflow-x-hidden নিশ্চিত করে যে মোবাইলে কোনো অবস্থাতেই ডানে অতিরিক্ত স্ক্রোলবার আসবে না
+    <div className="flex min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* ------------------------------------------------------------- */}
       {/* ১. Desktop Sidebar (Large Screens)                            */}
       {/* ------------------------------------------------------------- */}
@@ -65,7 +66,8 @@ export default async function DashboardLayout({
       {/* ------------------------------------------------------------- */}
       {/* ২. Main Section (Header + Body)                               */}
       {/* ------------------------------------------------------------- */}
-      <div className="flex-1 flex flex-col lg:pl-64">
+      {/* CHANGE HERE: added 'min-w-0' & 'w-full' */}
+      <div className="flex-1 flex flex-col lg:pl-64 min-w-0 w-full">
         {/* Top Header */}
         <header className="sticky top-0 z-40 h-16 flex items-center justify-between gap-4 border-b border-border/60 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 px-4 lg:px-8 shadow-xs">
           {/* Mobile Sheet Navigation */}
@@ -155,7 +157,8 @@ export default async function DashboardLayout({
         {/* ------------------------------------------------------------- */}
         {/* ৩. Dashboard Content Section                                 */}
         {/* ------------------------------------------------------------- */}
-        <main className="flex-1 p-4 md:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+        {/* CHANGE HERE: added 'min-w-0' to keep width contained */}
+        <main className="flex-1 p-4 md:p-6 lg:p-8 max-w-7xl w-full mx-auto min-w-0">
           {children}
         </main>
       </div>

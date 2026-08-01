@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   Mail,
   Calendar,
+  Sparkles,
 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -133,8 +134,9 @@ export default async function AdminOverviewPage() {
       {/* Header */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
             System Admin Overview
+            <Sparkles className="h-5 w-5 text-amber-500 fill-amber-500/20" />
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             Platform performance, user management, and overall revenue insights.
@@ -236,7 +238,10 @@ export default async function AdminOverviewPage() {
             asChild
             className="text-xs font-normal"
           >
-            <Link href="/admin-dashboard/users" className="flex items-center gap-1">
+            <Link
+              href="/admin-dashboard/users"
+              className="flex items-center gap-1"
+            >
               Manage All Users <ArrowUpRight className="h-3.5 w-3.5" />
             </Link>
           </Button>

@@ -33,7 +33,7 @@ export const getAllGearItems = async ({
     params.set("availability", query.availability as string);
   }
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const url = `${apiUrl}/api/gear${params.toString() ? `?${params.toString()}` : ""}`;
 
   console.log("🔍 Fetching gears with URL:", url);

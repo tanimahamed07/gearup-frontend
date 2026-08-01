@@ -6,9 +6,9 @@ import {
   Trash2,
   Layers,
   Plus,
-  FolderTree,
-  Search,
   Loader2,
+  Sparkles,
+  AlertTriangle,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -37,6 +37,8 @@ import {
 // Actions
 import { getCategory } from "@/app/(public)/_action/getCategory";
 import { postCategory } from "../../_action/postCategory";
+import { deleteCategory } from "../../_action/deleteCategory";
+import { CopyButton } from "@/components/ui/copy-button";
 
 export interface ICategory {
   id: string;
@@ -44,30 +46,36 @@ export interface ICategory {
 }
 
 export default function AdminCategoriesPage() {
-  const [categories, setCategories] = useState<ICategory[]>([]);
   const [categoryName, setCategoryName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [categories, setCategories] = useState<ICategory[]>([]);
+
+  // Dialog States
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<ICategory | null>(
+    null,
+  );
 
-  // 1. Fetch Categories
+  // 1. Fetch Categories Function
+  const fetchCategories = async () => {
+    try {
+      setIsLoading(true);
+      const res = await getCategory();
+      setCategories(res?.data || []);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setIsLoading(true);
-        const res = await getCategory();
-        setCategories(res?.data || []);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchCategories();
   }, []);
 
-  // 2. Create Category using Server Action
+  // 2. Create Category Handler
   const handleCreateCategory = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!categoryName.trim()) return;
@@ -81,10 +89,7 @@ export default function AdminCategoriesPage() {
         toast.success("Category created successfully!");
         setCategoryName("");
         setIsDialogOpen(false);
-
-        // Refresh category list
-        const res = await getCategory();
-        setCategories(res?.data || []);
+        fetchCategories();
       } else {
         toast.error(data?.message || "Failed to create category");
       }
@@ -96,23 +101,51 @@ export default function AdminCategoriesPage() {
     }
   };
 
+  // 3. Delete Category Action inside Modal
+  const confirmDeleteCategory = async () => {
+    if (!categoryToDelete) return;
+
+    try {
+      setIsDeleting(true);
+      const res = await deleteCategory(categoryToDelete.id);
+
+      if (res?.success) {
+        toast.success(
+          `Category "${categoryToDelete.name}" deleted successfully!`,
+        );
+        setCategories((prev) =>
+          prev.filter((item) => item.id !== categoryToDelete.id),
+        );
+        setCategoryToDelete(null); // Modal বন্ধ করে দেবে
+      } else {
+        toast.error(res?.message || "Failed to delete category");
+      }
+    } catch (error) {
+      console.error("Error deleting category:", error);
+      toast.error("Something went wrong while deleting!");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 w-full max-w-full min-w-0">
       {/* Header & Add Category Button */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <FolderTree className="h-8 w-8 text-primary" /> Category Management
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
+            Category Management
+            <Sparkles className="h-5 w-5 text-amber-500 fill-amber-500/20" />
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Overview and manage all gear categories for GearUp.
+          <p className="text-xs md:text-sm text-muted-foreground mt-1">
+            Overview and manage all gear categories for GearUp
           </p>
         </div>
 
         {/* Add Category Dialog Modal UI */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="gap-2 shadow-sm font-semibold">
+            <Button className="gap-2 shadow-sm font-semibold self-start sm:self-auto">
               <Plus className="h-4 w-4" /> Add New Category
             </Button>
           </DialogTrigger>
@@ -129,7 +162,7 @@ export default function AdminCategoriesPage() {
               </DialogHeader>
 
               <div className="py-4 space-y-2">
-                <label className="text-xs font-semibold text-foreground">
+                <label className="text-xs font-bold text-foreground">
                   Category Name <span className="text-destructive">*</span>
                 </label>
                 <Input
@@ -141,7 +174,11 @@ export default function AdminCategoriesPage() {
               </div>
 
               <DialogFooter>
-                <Button type="submit" disabled={isSubmitting} className="gap-2">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="gap-2 font-semibold"
+                >
                   {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
                   Create Category
                 </Button>
@@ -151,81 +188,111 @@ export default function AdminCategoriesPage() {
         </Dialog>
       </div>
 
-      {/* Main Category Table */}
-      <Card className="border border-border/60 shadow-sm overflow-hidden">
+      {/* Main Category Table Card */}
+      <Card className="border border-border/60 shadow-sm rounded-xl overflow-hidden bg-card">
         <CardHeader className="border-b border-border/40 bg-muted/20 px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <CardTitle className="text-base font-semibold flex items-center gap-2">
             <Layers className="h-5 w-5 text-primary" />
             All Categories ({categories.length})
           </CardTitle>
-
-          {/* Search Input UI */}
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search category..."
-              className="pl-8 text-xs bg-background"
-            />
-          </div>
         </CardHeader>
 
         <CardContent className="p-0">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12 text-muted-foreground text-sm gap-2">
-              <Loader2 className="h-4 w-4 animate-spin" /> Loading categories...
-            </div>
-          ) : categories.length > 0 ? (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader className="bg-muted/30">
-                  <TableRow>
-                    <TableHead>Category Name</TableHead>
-                    <TableHead>Category ID</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-
-                <TableBody>
-                  {categories.map((category) => (
-                    <TableRow
-                      key={category.id}
-                      className="hover:bg-muted/30 transition-colors"
-                    >
-                      <TableCell className="font-semibold text-foreground text-sm">
-                        <Badge
-                          variant="secondary"
-                          className="font-medium text-xs"
-                        >
-                          {category.name}
-                        </Badge>
-                      </TableCell>
-
-                      <TableCell className="text-xs font-mono text-muted-foreground">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="px-6">Name</TableHead>
+                <TableHead className="px-6">ID</TableHead>
+                <TableHead className="px-6 text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={3} className="h-24 text-center">
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto text-primary" />
+                  </TableCell>
+                </TableRow>
+              ) : categories.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={3}
+                    className="h-24 text-center text-muted-foreground"
+                  >
+                    No categories found.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                categories.map((category) => (
+                  <TableRow key={category.id}>
+                    <TableCell className="px-6 font-medium">
+                      {category.name}
+                    </TableCell>
+                    <TableCell className="px-6 text-muted-foreground font-mono text-xs">
+                      <div className="flex items-center gap-2">
                         {category.id}
-                      </TableCell>
-
-                      <TableCell className="text-right">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                          title="Delete Category"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          ) : (
-            <div className="p-12 text-center text-muted-foreground text-sm">
-              No categories found.
-            </div>
-          )}
+                        <CopyButton value={category.id} />
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-6 text-right">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setCategoryToDelete(category)}
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
+
+      {/* Delete Confirmation Modal */}
+      <Dialog
+        open={!!categoryToDelete}
+        onOpenChange={(open) => !open && setCategoryToDelete(null)}
+      >
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-5 w-5" /> Delete Category
+            </DialogTitle>
+            <DialogDescription className="pt-2">
+              Are you sure you want to delete{" "}
+              <span className="font-bold text-foreground">
+                {categoryToDelete?.name}
+              </span>
+              ? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter className="gap-2 sm:gap-0 pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setCategoryToDelete(null)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={confirmDeleteCategory}
+              disabled={isDeleting}
+              className="gap-2"
+            >
+              {isDeleting && <Loader2 className="h-4 w-4 animate-spin" />}
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

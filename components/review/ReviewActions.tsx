@@ -21,12 +21,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Star } from "lucide-react";
 
 interface ReviewActionsProps {
-  review: {
-    _id: string;
+  review?: {
+    id?: string;
+    _id?: string;
     rating: number;
     comment?: string;
     review?: string;
-  };
+  } | null;
 }
 
 export function ReviewActions({ review }: ReviewActionsProps) {
@@ -34,17 +35,24 @@ export function ReviewActions({ review }: ReviewActionsProps) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   // Form State
-  const [rating, setRating] = useState(review.rating || 5);
-  const [comment, setComment] = useState(review.comment || review.review || "");
+  const [rating, setRating] = useState(review?.rating || 5);
+  const [comment, setComment] = useState(
+    review?.comment || review?.review || "",
+  );
   const [loading, setLoading] = useState(false);
+
+  // Don't render if no review
+  if (!review) return null;
+
+  const reviewId = review._id || review.id || "";
 
   // Edit Review Handler
   const handleEdit = async () => {
     try {
       setLoading(true);
       // TODO: Connect your edit review Server Action or API
-      // await updateGearReview(review._id, { rating, comment });
-      console.log("Updating review:", review._id, { rating, comment });
+      // await updateGearReview(reviewId, { rating, comment });
+      console.log("Updating review:", reviewId, { rating, comment });
 
       setIsEditOpen(false);
     } catch (error) {
@@ -59,8 +67,8 @@ export function ReviewActions({ review }: ReviewActionsProps) {
     try {
       setLoading(true);
       // TODO: Connect your delete review Server Action or API
-      // await deleteGearReview(review._id);
-      console.log("Deleting review:", review._id);
+      // await deleteGearReview(reviewId);
+      console.log("Deleting review:", reviewId);
 
       setIsDeleteOpen(false);
     } catch (error) {

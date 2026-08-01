@@ -39,9 +39,9 @@ export default async function HomePage() {
   return (
     <div className="space-y-16 sm:space-y-24 pb-16">
       {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-32 border-b border-border/40 bg-gradient-to-b from-primary/5 via-background to-background">
+      <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-32 border-b border-border/40 bg-linear-to-b from-primary/5 via-background to-background">
         {/* Ambient Background Glow Effect */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-primary/10 blur-[120px] rounded-full pointer-events-none -z-10" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-75 bg-primary/10 blur-[120px] rounded-full pointer-events-none -z-10" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -62,7 +62,7 @@ export default async function HomePage() {
               {/* Generic High-Impact Heading */}
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-foreground leading-[1.15]">
                 Everything You Need To{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-indigo-500">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-500 to-indigo-500">
                   Create Without Limits
                 </span>
               </h1>
@@ -137,7 +137,7 @@ export default async function HomePage() {
             {/* Right Column: Hero Visual Feature Box */}
             <div className="lg:col-span-5 relative flex justify-center items-center">
               {/* Glow backdrop behind card */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-purple-500/20 to-indigo-500/20 rounded-3xl blur-2xl transform rotate-2 scale-95" />
+              <div className="absolute inset-0 bg-linear-to-tr from-primary/20 via-purple-500/20 to-indigo-500/20 rounded-3xl blur-2xl transform rotate-2 scale-95" />
 
               {/* Interactive Hub Showcase Card */}
               <div className="relative w-full max-w-md rounded-2xl border border-border/60 bg-card/80 backdrop-blur-xl p-6 shadow-2xl space-y-6">
@@ -281,8 +281,8 @@ export default async function HomePage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {[
-              { name: "Cameras", count: "120+ Items", icon: Camera },
-              { name: "Lenses", count: "85+ Items", icon: SlidersHorizontal },
+              { name: "Camera", count: "120+ Items", icon: Camera },
+              { name: "Lense", count: "85+ Items", icon: SlidersHorizontal },
               { name: "Lighting", count: "40+ Items", icon: Sparkles },
               { name: "Audio Gear", count: "60+ Items", icon: ShieldCheck },
             ].map((cat, idx) => {
@@ -340,7 +340,7 @@ export default async function HomePage() {
                 >
                   <CardContent className="p-0">
                     {/* Image Box */}
-                    <div className="relative aspect-[4/3] w-full bg-muted overflow-hidden">
+                    <div className="relative aspect-4/3 w-full bg-muted overflow-hidden">
                       <Image
                         src={item.image || "/placeholder.png"}
                         alt={item.name}
@@ -445,7 +445,7 @@ export default async function HomePage() {
         </section>
 
         {/* 5. CALL TO ACTION (CTA) */}
-        <section className="rounded-2xl bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-8 sm:p-12 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+        <section className="rounded-2xl bg-linear-to-r from-primary to-primary/80 text-primary-foreground p-8 sm:p-12 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
           <div className="space-y-2 max-w-xl">
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
               Have unused camera gear?
