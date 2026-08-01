@@ -19,9 +19,11 @@ export const updateGearItem = async (id: string, payload: IGearItem) => {
 
   const data = await res.json();
 
-  // Revalidate the provider gears page to show the updated item
+  // Revalidate both provider gears page and public browse gears page
   if (data?.success) {
-    revalidatePath("/provider-dashboard/gears");
+    revalidatePath("/provider-dashboard/gears"); // Provider's inventory page
+    revalidatePath("/gears"); // Public browse gears page
+    revalidatePath(`/gears/${id}`); // Specific gear details page
   }
 
   return data;

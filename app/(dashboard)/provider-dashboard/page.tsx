@@ -328,7 +328,7 @@ export default async function ProviderOverviewPage() {
                 asChild
                 className="gap-1 text-xs font-normal"
               >
-                <Link href="/provider-dashboard/inventory">
+                <Link href="/provider-dashboard/gears">
                   Manage <ChevronRight className="h-3.5 w-3.5" />
                 </Link>
               </Button>

@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 export interface CreateReviewPayload {
   gearItemId: string;
@@ -22,6 +23,11 @@ export const createReviewAction = async (payload: CreateReviewPayload) => {
   });
 
   const data = await res.json();
+
+  // Revalidate the gear details page to show the new review
+  if (data?.success) {
+    revalidatePath(`/gears/${payload.gearItemId}`);
+  }
 
   return data;
 };

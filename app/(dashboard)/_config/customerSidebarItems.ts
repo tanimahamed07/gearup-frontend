@@ -3,7 +3,6 @@ import {
   LayoutDashboard,
   Settings,
   ShoppingBag,
-  Star,
 } from "lucide-react";
 import { ADMIN_SIDEBAR_ITEMS } from "./adminSidebarItems";
 import { ISidebarItem } from "@/lib/types/types";

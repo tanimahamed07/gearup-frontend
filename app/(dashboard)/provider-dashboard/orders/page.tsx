@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { StatusSelect } from "../../_component/StatusSelect";
 
 // Data Type Definition
 export interface IOrderItem {
@@ -45,13 +46,12 @@ export interface IOrderItem {
 export default async function IncomingOrdersPage() {
   const result = await getIncomingOrders();
   const orders: IOrderItem[] = result?.data || [];
-  console.log(orders);
 
   // Stats Calculation
   const totalOrders = orders.length;
   const activeOrders = orders.filter(
     (o) =>
-      o.rentalOrder?.status === "PAID" || o.rentalOrder?.status === "APPROVED",
+      o.rentalOrder?.status === "PAID" || o.rentalOrder?.status === "CONFIRMED",
   ).length;
   const totalEarnings = orders.reduce(
     (acc, item) => acc + Number(item.subtotal || 0),
@@ -107,7 +107,7 @@ export default async function IncomingOrdersPage() {
               {activeOrders}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Active/Paid rentals
+              Active/Confirmed rentals
             </p>
           </CardContent>
         </Card>
@@ -149,12 +149,15 @@ export default async function IncomingOrdersPage() {
               <Table>
                 <TableHeader className="bg-muted/30">
                   <TableRow>
-                    <TableHead className="w-72">Gear Item</TableHead>
-                    <TableHead className="w-56">Customer</TableHead>
-                    <TableHead className="w-56">Rental Period</TableHead>
-                    <TableHead className="w-28">Quantity</TableHead>
-                    <TableHead className="w-32">Total</TableHead>
-                    <TableHead className="w-32 text-right">Order Status</TableHead>
+                    <TableHead className="w-64">Gear Item</TableHead>
+                    <TableHead className="w-48">Customer</TableHead>
+                    <TableHead className="w-48">Rental Period</TableHead>
+                    <TableHead className="w-24">Qty</TableHead>
+                    <TableHead className="w-28">Total</TableHead>
+                    <TableHead className="w-32">Order Status</TableHead>
+                    <TableHead className="w-40 text-right">
+                      Update Status
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -189,7 +192,7 @@ export default async function IncomingOrdersPage() {
                                 unoptimized
                               />
                             </div>
-                            <div className="space-y-0.5 max-w-52">
+                            <div className="space-y-0.5 max-w-48">
                               <p className="font-semibold text-sm text-foreground line-clamp-1">
                                 {item.gearItem?.name}
                               </p>
@@ -247,23 +250,35 @@ export default async function IncomingOrdersPage() {
                           </span>
                         </TableCell>
 
-                        {/* Order Status */}
-                        <TableCell className="text-right">
-                          {item.rentalOrder?.status === "PAID" ? (
+                        {/* Order Status Badge */}
+                        <TableCell>
+                          {item.rentalOrder?.status === "CONFIRMED" ||
+                          item.rentalOrder?.status === "PAID" ? (
                             <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 font-medium">
                               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse" />
-                              PAID
+                              {item.rentalOrder?.status}
                             </Badge>
-                          ) : item.rentalOrder?.status === "PENDING" ? (
-                            <Badge className="bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30 font-medium">
-                              <Clock className="w-3 h-3 mr-1" />
-                              PENDING
+                          ) : item.rentalOrder?.status === "PICKED_UP" ? (
+                            <Badge className="bg-purple-500/15 text-purple-700 dark:text-purple-400 border-purple-500/30 font-medium">
+                              PICKED UP
+                            </Badge>
+                          ) : item.rentalOrder?.status === "RETURNED" ? (
+                            <Badge className="bg-gray-500/15 text-gray-700 dark:text-gray-400 border-gray-500/30 font-medium">
+                              RETURNED
                             </Badge>
                           ) : (
                             <Badge variant="outline" className="font-medium">
-                              {item.rentalOrder?.status || "UNKNOWN"}
+                              {item.rentalOrder?.status || "PLACED"}
                             </Badge>
                           )}
+                        </TableCell>
+
+                        {/* Update Status Dropdown */}
+                        <TableCell className="text-right">
+                          <StatusSelect
+                            orderId={item.rentalOrderId}
+                            currentStatus={item.rentalOrder?.status || "PLACED"}
+                          />
                         </TableCell>
                       </TableRow>
                     );
