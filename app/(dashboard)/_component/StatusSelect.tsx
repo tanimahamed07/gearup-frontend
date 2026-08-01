@@ -48,7 +48,7 @@ export function StatusSelect({ orderId, currentStatus }: StatusSelectProps) {
           handleStatusChange(val as RentalOrderStatusType)
         }
       >
-        <SelectTrigger className="w-[130px] h-8 text-xs font-medium">
+        <SelectTrigger className="w-32.5 h-8 text-xs font-medium">
           <SelectValue placeholder="Select status" />
         </SelectTrigger>
         <SelectContent>

@@ -39,9 +39,11 @@ export function UserStatusSelect({ userId, currentStatus }: Props) {
       <Select
         disabled={isPending}
         value={status}
-        onValueChange={(val) => handleStatusChange(val as "ACTIVE" | "SUSPENDED")}
+        onValueChange={(val) =>
+          handleStatusChange(val as "ACTIVE" | "SUSPENDED")
+        }
       >
-        <SelectTrigger className="w-[120px] h-8 text-xs font-medium">
+        <SelectTrigger className="w-30 h-8 text-xs font-medium">
           <SelectValue placeholder="Select status" />
         </SelectTrigger>
         <SelectContent>

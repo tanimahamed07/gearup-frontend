@@ -63,7 +63,7 @@ export async function proxy(request: NextRequest) {
 
   // User is logged in and trying to access login or register page, redirect to appropriate dashboard
   if (accessToken && AUTH_ROUTES.includes(pathname)) {
-    if (userRole === "USER") {
+    if (userRole === "CUSTOMER") {
       return NextResponse.redirect(new URL("/customer-dashboard", request.url));
     } else if (userRole === "ADMIN") {
       return NextResponse.redirect(new URL("/admin-dashboard", request.url));
@@ -90,7 +90,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // Authorization: Role based access control
-  if (pathname.startsWith("/customer-dashboard") && userRole !== "USER") {
+  if (pathname.startsWith("/customer-dashboard") && userRole !== "CUSTOMER") {
     return NextResponse.redirect(new URL("/not-found", request.url));
   } else if (pathname.startsWith("/admin-dashboard") && userRole !== "ADMIN") {
     return NextResponse.redirect(new URL("/not-found", request.url));

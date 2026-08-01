@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { format } from "date-fns";
-import { ShoppingBag, Calendar, Clock, CheckCircle2, Tag } from "lucide-react";
+import { ShoppingBag, Calendar, CheckCircle2, Tag } from "lucide-react";
 
 import { getIncomingOrders } from "../../_action/getIncomingOrders";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
