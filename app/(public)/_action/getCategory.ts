@@ -7,7 +7,8 @@ export const getCategory = async () => {
     headers: {
       "Content-Type": "application/json",
     },
-    next: { revalidate: 3600 },
+    cache: "no-store",
+    next: { revalidate: 0 },
   });
 
   const data = await res.json();

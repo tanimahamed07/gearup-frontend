@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import { getMe } from "@/service/getMe";
 
@@ -20,6 +20,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import Sidebar from "./_component/Sidebar";
 import MobileSeet from "./_component/MobileSeet";
 import { sidebarMenuItems } from "./_config/customerSidebarItems";
+import DashboardLoading from "./admin-dashboard/loading";
 
 // Types
 export type UserRole = "CUSTOMER" | "PROVIDER" | "ADMIN";

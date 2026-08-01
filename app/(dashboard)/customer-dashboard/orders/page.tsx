@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { OrderRow } from "../../_component/OrderRow";
+import Loading from "@/app/loading";
 
 // Interface definitions
 export interface IGearItem {
@@ -77,17 +78,7 @@ export default function OrderHistoryPage() {
   }, []);
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[400px]">
-        <div className="relative flex items-center justify-center">
-          <div className="h-12 w-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
-          <Package className="h-5 w-5 text-primary absolute" />
-        </div>
-        <p className="text-sm font-medium text-muted-foreground mt-4 animate-pulse">
-          Loading your rental orders...
-        </p>
-      </div>
-    );
+    return <Loading></Loading>;
   }
 
   return (

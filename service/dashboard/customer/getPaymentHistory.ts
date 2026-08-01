@@ -14,17 +14,18 @@ export const getPaymentHistory = async () => {
     };
   }
 
+  // DEVELOPMENT ONLY: Uncomment below line to simulate slow loading for testing
+  // await new Promise(resolve => setTimeout(resolve, 2000));
+
   const res = await fetch(`${process.env.BACKEND_API_URL}/api/payments`, {
     headers: {
-      // Authorization : accessToken as unknown as string,
-      // Authorization : `${accessToken}`,
-      // Authorization : `Bearer ${accessToken}`
-
       Cookie: `accessToken=${accessToken}`,
     },
+    cache: "no-store", // Disable caching - forces fresh fetch every time
+    next: { revalidate: 0 }, // Revalidate immediately
   });
 
-  const result = res.json();
+  const result = await res.json();
 
   return result;
 };
