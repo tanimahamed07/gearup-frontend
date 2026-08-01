@@ -14,7 +14,6 @@ import { IOrder } from "../customer-dashboard/orders/page";
 // Order Row Component
 export function OrderRow({ order }: { order: IOrder }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  console.log(">>>>>>>>", order)
 
   const totalItemsCount =
     order.rentalOrderItems?.reduce((acc, item) => acc + item.quantity, 0) || 0;
@@ -37,7 +36,6 @@ export function OrderRow({ order }: { order: IOrder }) {
       setIsPaying(true);
       const res = await createCheckoutSession(order.id);
 
-      // Backend থেকে যদি paymentUrl ফেরত আসে, তাহলে সেখানে Redirect হবে
       if (res?.success && res?.data?.paymentUrl) {
         window.location.href = res.data.paymentUrl;
       } else {
@@ -51,25 +49,25 @@ export function OrderRow({ order }: { order: IOrder }) {
     }
   };
 
-  const getStatusBadge = (status: string) => {
+  // Order Status Badge
+  const getOrderStatusBadge = (status: string) => {
     switch (status?.toUpperCase()) {
+      case "CONFIRMED":
+        return (
+          <Badge className="bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/25 border-emerald-500/30 dark:text-emerald-400">
+            Confirmed
+          </Badge>
+        );
       case "PAID":
         return (
           <Badge className="bg-blue-500/15 text-blue-700 hover:bg-blue-500/25 border-blue-500/30 dark:text-blue-400">
             Paid
           </Badge>
         );
-      case "COMPLETED":
-        return (
-          <Badge className="bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/25 border-emerald-500/30 dark:text-emerald-400">
-            Completed
-          </Badge>
-        );
       case "PLACED":
-      case "PENDING":
         return (
           <Badge className="bg-amber-500/15 text-amber-700 hover:bg-amber-500/25 border-amber-500/30 dark:text-amber-400">
-            Pending
+            Placed
           </Badge>
         );
       case "CANCELLED":
@@ -78,8 +76,45 @@ export function OrderRow({ order }: { order: IOrder }) {
             Cancelled
           </Badge>
         );
+      case "PICKED_UP":
+        return (
+          <Badge className="bg-purple-500/15 text-purple-700 border-purple-500/30 dark:text-purple-400">
+            Picked Up
+          </Badge>
+        );
+      case "RETURNED":
+        return (
+          <Badge className="bg-gray-500/15 text-gray-700 border-gray-500/30 dark:text-gray-400">
+            Returned
+          </Badge>
+        );
       default:
         return <Badge variant="outline">{status}</Badge>;
+    }
+  };
+
+  // Payment Status Badge (COMPLETED হলে Paid ব্যাজ দেখাবে)
+  const getPaymentStatusBadge = (status?: string) => {
+    switch (status?.toUpperCase()) {
+      case "COMPLETED":
+        return (
+          <Badge className="bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/25 border-emerald-500/30 dark:text-emerald-400">
+            Paid
+          </Badge>
+        );
+      case "FAILED":
+        return (
+          <Badge className="bg-red-500/15 text-red-700 border-red-500/30 dark:text-red-400">
+            Failed
+          </Badge>
+        );
+      case "PENDING":
+      default:
+        return (
+          <Badge className="bg-amber-500/15 text-amber-700 hover:bg-amber-500/25 border-amber-500/30 dark:text-amber-400">
+            Pending
+          </Badge>
+        );
     }
   };
 
@@ -143,8 +178,11 @@ export function OrderRow({ order }: { order: IOrder }) {
           </span>
         </TableCell>
 
-        {/* Status */}
-        <TableCell>{getStatusBadge(order.status)}</TableCell>
+        {/* Order Status Column */}
+        <TableCell>{getOrderStatusBadge(order.status)}</TableCell>
+
+        {/* Payment Status Column */}
+        <TableCell>{getPaymentStatusBadge(order.payment?.status)}</TableCell>
 
         {/* Actions */}
         <TableCell className="text-right">
@@ -175,7 +213,7 @@ export function OrderRow({ order }: { order: IOrder }) {
       {/* Expanded Order Items */}
       {isExpanded && (
         <TableRow className="hover:bg-transparent">
-          <TableCell colSpan={7} className="p-0">
+          <TableCell colSpan={8} className="p-0">
             <div className="bg-muted/30 border-t border-border/40">
               <div className="px-4 py-3">
                 <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">

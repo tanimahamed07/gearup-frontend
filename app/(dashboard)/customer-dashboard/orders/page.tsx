@@ -37,6 +37,9 @@ export interface IRentalOrderItem {
 }
 
 export interface IOrder {
+  payment: {
+    status: "PENDING" | "COMPLETED" | "FAILED";
+  };
   id: string;
   customerId: string;
   startDate: string;
@@ -126,8 +129,9 @@ export default function OrderHistoryPage() {
                     <TableHead className="w-40">Order ID</TableHead>
                     <TableHead className="w-56">Rental Period</TableHead>
                     <TableHead className="w-28 text-center">Items</TableHead>
-                    <TableHead className="w-32">Total</TableHead>
-                    <TableHead className="w-32">Status</TableHead>
+                    <TableHead className="w-28">Total</TableHead>
+                    <TableHead className="w-32">Order Status</TableHead>
+                    <TableHead className="w-32">Payment Status</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>

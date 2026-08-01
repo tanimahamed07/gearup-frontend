@@ -10,6 +10,8 @@ import {
   Receipt,
   ShoppingBag,
   CheckCircle2,
+  XCircle,
+  Clock,
 } from "lucide-react";
 
 import { getRentalOrdersDetails } from "@/service/dashboard/customer/getRentalOrderDetails";
@@ -17,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { CopyButton } from "@/components/ui/copy-button";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -54,29 +57,37 @@ export default async function OrderDetailsPage({ params }: PageProps) {
       Math.abs(endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
     ) || 1;
 
-  // Status Badge Logic
-  const getStatusBadge = (status: string) => {
+  // Order Status Badge Logic
+  const getOrderStatusBadge = (status: string) => {
     switch (status?.toUpperCase()) {
-      case "PAID":
       case "CONFIRMED":
-      case "COMPLETED":
         return (
           <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 px-3 py-1 font-medium">
-            {status}
+            Confirmed
+          </Badge>
+        );
+      case "PAID":
+        return (
+          <Badge className="bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/30 px-3 py-1 font-medium">
+            Paid
           </Badge>
         );
       case "PICKED_UP":
+        return (
+          <Badge className="bg-purple-500/15 text-purple-700 dark:text-purple-400 border-purple-500/30 px-3 py-1 font-medium">
+            Picked Up
+          </Badge>
+        );
       case "RETURNED":
         return (
-          <Badge className="bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/30 px-3 py-1 font-medium">
-            {status}
+          <Badge className="bg-gray-500/15 text-gray-700 dark:text-gray-400 border-gray-500/30 px-3 py-1 font-medium">
+            Returned
           </Badge>
         );
       case "PLACED":
-      case "PENDING":
         return (
           <Badge className="bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30 px-3 py-1 font-medium">
-            Pending Payment
+            Placed
           </Badge>
         );
       case "CANCELLED":
@@ -87,6 +98,34 @@ export default async function OrderDetailsPage({ params }: PageProps) {
         );
       default:
         return <Badge variant="outline">{status}</Badge>;
+    }
+  };
+
+  // Payment Status Element Logic
+  const getPaymentStatusDisplay = (status?: string) => {
+    switch (status?.toUpperCase()) {
+      case "COMPLETED":
+        return (
+          <span className="font-semibold text-xs flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+            <CheckCircle2 className="h-3.5 w-3.5" />
+            Paid
+          </span>
+        );
+      case "FAILED":
+        return (
+          <span className="font-semibold text-xs flex items-center gap-1 text-red-600 dark:text-red-400">
+            <XCircle className="h-3.5 w-3.5" />
+            Failed
+          </span>
+        );
+      case "PENDING":
+      default:
+        return (
+          <span className="font-semibold text-xs flex items-center gap-1 text-amber-600 dark:text-amber-400">
+            <Clock className="h-3.5 w-3.5" />
+            Pending
+          </span>
+        );
     }
   };
 
@@ -111,12 +150,17 @@ export default async function OrderDetailsPage({ params }: PageProps) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/60 pb-5">
         <div>
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-              Order #{order.id?.slice(0, 8)}...
-            </h1>
-            {getStatusBadge(order.status)}
+            {/* Full Order ID Display with Copy Button */}
+            <div className="flex items-center gap-1 bg-muted/50 border border-border/60 px-3 py-1 rounded-lg">
+              <h1 className="text-lg sm:text-2xl font-bold tracking-tight font-mono text-foreground">
+                Order #{order.id}
+              </h1>
+              <CopyButton value={order.id} />
+            </div>
+
+            {getOrderStatusBadge(order.status)}
           </div>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-muted-foreground mt-2">
             Placed on{" "}
             {order.createdAt
               ? format(new Date(order.createdAt), "MMMM dd, yyyy - hh:mm a")
@@ -265,31 +309,31 @@ export default async function OrderDetailsPage({ params }: PageProps) {
                 <>
                   <div className="flex justify-between items-center">
                     <span className="text-muted-foreground">Status:</span>
-                    <span className="font-semibold text-xs flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
-                      <CheckCircle2 className="h-3.5 w-3.5" />
-                      {order.payment.status}
-                    </span>
+                    {getPaymentStatusDisplay(order.payment.status)}
                   </div>
 
                   <div className="flex justify-between items-center">
                     <span className="text-muted-foreground">Method:</span>
                     <span className="font-semibold uppercase flex items-center gap-1 text-xs">
                       <CreditCard className="h-3.5 w-3.5 text-primary" />{" "}
-                      {order.payment.method || "ONLINE"}
+                      {order.payment.method || "CARD"}
                     </span>
                   </div>
 
                   {order.payment.transactionId && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">
+                    <div className="flex justify-between items-center gap-2">
+                      <span className="text-muted-foreground shrink-0">
                         Transaction ID:
                       </span>
-                      <span
-                        title={order.payment.transactionId}
-                        className="font-mono text-xs font-semibold bg-muted px-2 py-0.5 rounded border max-w-[140px] truncate"
-                      >
-                        {order.payment.transactionId}
-                      </span>
+                      <div className="flex items-center gap-1 overflow-hidden">
+                        <span
+                          title={order.payment.transactionId}
+                          className="font-mono text-xs font-semibold bg-muted px-2 py-0.5 rounded border truncate"
+                        >
+                          {order.payment.transactionId}
+                        </span>
+                        <CopyButton value={order.payment.transactionId} />
+                      </div>
                     </div>
                   )}
 
