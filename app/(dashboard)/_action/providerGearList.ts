@@ -16,15 +16,19 @@ export const getProviderGearList = async () => {
     };
   }
 
-  const res = await fetch(`${process.env.BACKEND_API_URL}/api/gear/my/listings`, {
-    headers: {
-      // Authorization : accessToken as unknown as string,
-      // Authorization : `${accessToken}`,
-      // Authorization : `Bearer ${accessToken}`
+  const res = await fetch(
+    `${process.env.BACKEND_API_URL}/api/gear/my/listings`,
+    {
+      headers: {
+        // Authorization : accessToken as unknown as string,
+        // Authorization : `${accessToken}`,
+        // Authorization : `Bearer ${accessToken}`
 
-      Cookie: `accessToken=${accessToken}`,
+        Cookie: `accessToken=${accessToken}`,
+      },
+      cache: "no-cache",
     },
-  });
+  );
 
   const result = res.json();
 

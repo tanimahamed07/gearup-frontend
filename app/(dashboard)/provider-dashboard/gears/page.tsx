@@ -3,9 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   Package,
-  Edit3,
-  Trash2,
-  MoreVertical,
   Layers,
   CheckCircle2,
   AlertTriangle,
@@ -13,7 +10,6 @@ import {
 } from "lucide-react";
 
 import { getProviderGearList } from "../../_action/providerGearList";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -29,6 +25,7 @@ import { GearFormDialog } from "../../_component/GearFormDialog";
 import { getCategory } from "@/app/(public)/_action/getCategory";
 import { ICategory } from "@/lib/types/types";
 import { GearActionMenu } from "../../_component/GearActionMenu";
+import { deleteGearItem } from "../../_action/deleteGearItem";
 
 export interface IGearItem {
   id: string;
@@ -51,6 +48,9 @@ export default async function ManageInventory() {
   const gears: IGearItem[] = res?.data || [];
   const response = await getCategory();
   const categories: ICategory[] = response?.data || [];
+
+
+
 
   console.log(categories);
 
@@ -203,7 +203,7 @@ export default async function ManageInventory() {
                               unoptimized
                             />
                           </div>
-                          <div className="space-y-0.5 max-w-[200px] sm:max-w-[240px]">
+                          <div className="space-y-0.5 max-w-50 sm:max-w-60">
                             <Link
                               href={`/gears/${gear.id}`}
                               className="font-semibold text-sm text-foreground hover:text-primary transition-colors line-clamp-1 flex items-center gap-1 group"

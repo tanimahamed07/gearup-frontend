@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -60,7 +61,7 @@ export default function BookingModal({
   const startDate = watch("startDate");
   const endDate = watch("endDate");
 
-  // Quantity বাড়ানোর হ্যান্ডলার
+
   const handleIncrease = () => {
     if (quantity < stock) {
       setQuantity((prev) => prev + 1);
@@ -101,7 +102,7 @@ export default function BookingModal({
         items: [
           {
             gearItemId,
-            quantity: quantity, // 👈 ১ এর জায়গায় ডাইনামিক Quantity
+            quantity: quantity, 
           },
         ],
       };
@@ -147,7 +148,7 @@ export default function BookingModal({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>Book Gear</DialogTitle>
           <DialogDescription>

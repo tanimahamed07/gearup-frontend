@@ -1,25 +1,23 @@
 "use server";
 
-import { IGearItem } from "@/lib/types/types";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
-export const postGearItem = async (payload: IGearItem) => {
+export const deleteGearItem = async (id: string) => {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
 
-  const res = await fetch(`${process.env.BACKEND_API_URL}/api/gear`, {
-    method: "POST",
+  const res = await fetch(`${process.env.BACKEND_API_URL}/api/gear/${id}`, {
+    method: "DELETE",
     headers: {
       "Content-Type": "application/json",
       Authorization: token ? `Bearer ${token}` : "",
     },
-    body: JSON.stringify(payload),
   });
 
   const data = await res.json();
 
-  // Revalidate the provider gears page to show the new item
+  // Revalidate the provider gears page to show the updated item
   if (data?.success) {
     revalidatePath("/provider-dashboard/gears");
   }
