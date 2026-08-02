@@ -81,10 +81,7 @@ export default function DashboardHeader({
               className="relative h-9 w-9 rounded-full ring-2 ring-primary/20 hover:ring-primary"
             >
               <Avatar className="h-9 w-9">
-                <AvatarImage
-                  src={user?.avatar || user?.image}
-                  alt={user?.name || "User"}
-                />
+                <AvatarImage src={user?.avatar} alt={user?.name || "User"} />
                 <AvatarFallback className="bg-primary/10 text-primary font-bold">
                   {userInitials}
                 </AvatarFallback>

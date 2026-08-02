@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MoreVertical, Pencil, Trash2, Loader2 } from "lucide-react";
+import { MoreVertical, Pencil, Trash2, Loader2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -18,7 +18,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Star } from "lucide-react";
 import { updateReviewAction } from "@/service/review/updateReview";
 import { deleteReviewAction } from "@/service/review/deleteReview";
 import { toast } from "sonner";
@@ -50,52 +49,40 @@ export function ReviewActions({ review }: ReviewActionsProps) {
 
   const reviewId = review._id || review.id || "";
 
-  // Edit Review Handler
+  // Edit Review Handler (Without try...catch)
   const handleEdit = async () => {
-    try {
-      setLoading(true);
+    setLoading(true);
 
-      const res = await updateReviewAction(
-        reviewId,
-        { rating, comment },
-        review?.gearItemId || "",
-      );
+    const res = await updateReviewAction(
+      reviewId,
+      { rating, comment },
+      review?.gearItemId || "",
+    );
 
-      if (res?.success) {
-        toast.success(res.message || "Review updated successfully!");
-        setIsEditOpen(false);
-      } else {
-        toast.error(res?.message || "Failed to update review");
-        console.error(res);
-      }
-    } catch (error) {
-      console.error("Failed to edit review", error);
-      toast.error("An unexpected error occurred. Please try again.");
-    } finally {
-      setLoading(false);
+    if (res?.success) {
+      toast.success(res.message || "Review updated successfully!");
+      setIsEditOpen(false);
+    } else {
+      toast.error(res?.message || "Failed to update review");
     }
+
+    setLoading(false);
   };
 
-  // Delete Review Handler
+  // Delete Review Handler (Without try...catch)
   const handleDelete = async () => {
-    try {
-      setLoading(true);
+    setLoading(true);
 
-      const res = await deleteReviewAction(reviewId, review?.gearItemId || "");
+    const res = await deleteReviewAction(reviewId, review?.gearItemId || "");
 
-      if (res?.success) {
-        toast.success(res.message || "Review deleted successfully!");
-        setIsDeleteOpen(false);
-      } else {
-        toast.error(res?.message || "Failed to delete review");
-        console.error(res);
-      }
-    } catch (error) {
-      console.error("Failed to delete review", error);
-      toast.error("An unexpected error occurred. Please try again.");
-    } finally {
-      setLoading(false);
+    if (res?.success) {
+      toast.success(res.message || "Review deleted successfully!");
+      setIsDeleteOpen(false);
+    } else {
+      toast.error(res?.message || "Failed to delete review");
     }
+
+    setLoading(false);
   };
 
   return (
@@ -129,7 +116,7 @@ export function ReviewActions({ review }: ReviewActionsProps) {
 
       {/* EDIT MODAL */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-106.25">
           <DialogHeader>
             <DialogTitle>Edit Review</DialogTitle>
             <DialogDescription>
@@ -196,7 +183,7 @@ export function ReviewActions({ review }: ReviewActionsProps) {
 
       {/* DELETE CONFIRMATION MODAL */}
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-        <DialogContent className="sm:max-w-[400px]">
+        <DialogContent className="sm:max-w-100">
           <DialogHeader>
             <DialogTitle>Delete Review</DialogTitle>
             <DialogDescription>

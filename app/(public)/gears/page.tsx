@@ -10,7 +10,7 @@ export type GearItem = {
   name: string;
   brand: string;
   description: string;
-  image?: string; 
+  image?: string;
   pricePerDay: number;
   stock: number;
   isAvailable: boolean;
