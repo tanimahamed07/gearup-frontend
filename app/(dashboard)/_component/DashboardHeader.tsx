@@ -105,18 +105,6 @@ export default function DashboardHeader({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem asChild className="cursor-pointer">
-              <Link href="/dashboard/profile" className="flex items-center">
-                <UserIcon className="mr-2 h-4 w-4" /> Profile
-              </Link>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem asChild className="cursor-pointer">
-              <Link href="/dashboard/settings" className="flex items-center">
-                <Settings className="mr-2 h-4 w-4" /> Settings
-              </Link>
-            </DropdownMenuItem>
-
             <DropdownMenuSeparator />
 
             <DropdownMenuItem

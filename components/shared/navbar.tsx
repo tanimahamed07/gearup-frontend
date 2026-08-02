@@ -27,6 +27,8 @@ import {
   PlusCircle,
   ShieldCheck,
   ChevronRight,
+  User,
+  ListOrdered,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { logout } from "@/service/logout";
@@ -174,10 +176,11 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
                 {user.role === "PROVIDER" && (
                   <DropdownMenuItem asChild className="cursor-pointer">
                     <Link
-                      href="/provider-dashboard/gears/add"
+                      href="/provider-dashboard/orders"
                       className="flex items-center"
                     >
-                      <PlusCircle className="mr-2 h-4 w-4" /> Add New Gear
+                      <ListOrdered className="mr-2 h-4 w-4" />
+                      Upcoming Orders
                     </Link>
                   </DropdownMenuItem>
                 )}
@@ -185,10 +188,10 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
                 {user.role === "ADMIN" && (
                   <DropdownMenuItem asChild className="cursor-pointer">
                     <Link
-                      href="/admin-dashboard/settings"
+                      href="/admin-dashboard/users"
                       className="flex items-center"
                     >
-                      <ShieldCheck className="mr-2 h-4 w-4" /> Admin Settings
+                      <User className="mr-2 h-4 w-4" /> Manage Users
                     </Link>
                   </DropdownMenuItem>
                 )}

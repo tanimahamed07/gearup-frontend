@@ -11,7 +11,7 @@ export default async function SidebarFilter() {
   const categories = result?.data || [];
 
   return (
-    <aside className="sticky top-16 h-fit rounded-xl border bg-card p-5 shadow-sm">
+    <aside className="h-fit rounded-xl border bg-card p-5 shadow-sm lg:sticky lg:top-16">
       {/* Sidebar Header */}
       <div className="mb-4 flex items-center justify-between border-b pb-3">
         <h2 className="flex items-center gap-2 font-semibold">

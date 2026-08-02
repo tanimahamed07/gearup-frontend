@@ -68,17 +68,9 @@ export default async function HomePage() {
                   asChild
                   className="w-full sm:w-auto gap-2 font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300"
                 >
-                  <Link href="/gear">
+                  <Link href="/gears">
                     Explore Gear <ArrowRight className="h-4 w-4" />
                   </Link>
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  asChild
-                  className="w-full sm:w-auto font-medium text-sm sm:text-base"
-                >
-                  <Link href="/register">List Your Gear</Link>
                 </Button>
               </div>
 
@@ -398,14 +390,12 @@ export default async function HomePage() {
               today.
             </p>
           </div>
-          <Button
-            size="lg"
-            variant="secondary"
-            asChild
+          <span
+           
             className="w-full sm:w-auto font-semibold shrink-0"
           >
-            <Link href="/register">Become a Provider</Link>
-          </Button>
+            Become a Provider
+          </span>
         </section>
       </div>
     </div>
