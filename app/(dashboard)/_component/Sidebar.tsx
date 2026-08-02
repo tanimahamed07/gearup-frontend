@@ -1,15 +1,41 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ISidebarItem } from "@/lib/types/types";
-import { Dumbbell, Home } from "lucide-react";
+import {
+  Dumbbell,
+  Home,
+  LayoutDashboard,
+  ShoppingBag,
+  CreditCard,
+  Settings,
+  Package,
+  Users,
+  FolderTree,
+  LucideIcon,
+} from "lucide-react";
 import Link from "next/link";
-import React from "react";
 import { UserRole } from "../layout";
 import { UserData } from "@/components/shared/navbar";
+
+// Icon mapping
+const iconMap: Record<string, LucideIcon> = {
+  LayoutDashboard,
+  ShoppingBag,
+  CreditCard,
+  Settings,
+  Package,
+  Users,
+  FolderTree,
+};
+
+interface NavItem {
+  name: string;
+  href: string;
+  iconName: string;
+}
 
 interface SidebarProps {
   user: UserData;
   role: UserRole;
-  navItems: ISidebarItem[];
+  navItems: NavItem[];
   userInitials: string;
 }
 
@@ -41,16 +67,19 @@ export default function Sidebar({
         <div className="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
           Menu
         </div>
-        {navItems.map((item) => (
-          <Link
-            key={item.name}
-            href={item.href}
-            className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-lg text-muted-foreground transition-all duration-200 hover:text-primary hover:bg-primary/10"
-          >
-            <item.icon className="h-4 w-4" />
-            {item.name}
-          </Link>
-        ))}
+        {navItems.map((item) => {
+          const IconComponent = iconMap[item.iconName] || LayoutDashboard;
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-lg text-muted-foreground transition-all duration-200 hover:text-primary hover:bg-primary/10"
+            >
+              <IconComponent className="h-4 w-4" />
+              {item.name}
+            </Link>
+          );
+        })}
 
         <div className="pt-4 mt-4 border-t border-border/40">
           <Link

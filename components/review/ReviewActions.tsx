@@ -19,6 +19,9 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Star } from "lucide-react";
+import { updateReviewAction } from "@/service/review/updateReview";
+import { deleteReviewAction } from "@/service/review/deleteReview";
+import { toast } from "sonner";
 
 interface ReviewActionsProps {
   review?: {
@@ -27,6 +30,7 @@ interface ReviewActionsProps {
     rating: number;
     comment?: string;
     review?: string;
+    gearItemId: string;
   } | null;
 }
 
@@ -50,13 +54,23 @@ export function ReviewActions({ review }: ReviewActionsProps) {
   const handleEdit = async () => {
     try {
       setLoading(true);
-      // TODO: Connect your edit review Server Action or API
-      // await updateGearReview(reviewId, { rating, comment });
-      console.log("Updating review:", reviewId, { rating, comment });
 
-      setIsEditOpen(false);
+      const res = await updateReviewAction(
+        reviewId,
+        { rating, comment },
+        review?.gearItemId || "",
+      );
+
+      if (res?.success) {
+        toast.success(res.message || "Review updated successfully!");
+        setIsEditOpen(false);
+      } else {
+        toast.error(res?.message || "Failed to update review");
+        console.error(res);
+      }
     } catch (error) {
       console.error("Failed to edit review", error);
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -66,13 +80,19 @@ export function ReviewActions({ review }: ReviewActionsProps) {
   const handleDelete = async () => {
     try {
       setLoading(true);
-      // TODO: Connect your delete review Server Action or API
-      // await deleteGearReview(reviewId);
-      console.log("Deleting review:", reviewId);
 
-      setIsDeleteOpen(false);
+      const res = await deleteReviewAction(reviewId, review?.gearItemId || "");
+
+      if (res?.success) {
+        toast.success(res.message || "Review deleted successfully!");
+        setIsDeleteOpen(false);
+      } else {
+        toast.error(res?.message || "Failed to delete review");
+        console.error(res);
+      }
     } catch (error) {
       console.error("Failed to delete review", error);
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }

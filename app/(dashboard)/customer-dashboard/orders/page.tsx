@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { OrderRow } from "../../_component/OrderRow";
-import Loading from "@/app/loading";
+import Loading from "@/components/shared/loading";
 
 // Interface definitions
 export interface IGearItem {

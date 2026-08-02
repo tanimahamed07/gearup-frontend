@@ -1,6 +1,6 @@
 import { Loader2, LayoutDashboard } from "lucide-react";
 
-export default function DashboardLoading() {
+export default function Loading() {
   return (
     <div className="flex items-center justify-center min-h-[70vh] w-full">
       <div className="flex flex-col items-center gap-4 px-4">

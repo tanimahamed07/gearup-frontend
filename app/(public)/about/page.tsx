@@ -36,25 +36,25 @@ export default function AboutPage() {
       icon: Compass,
       title: "Limitless Exploration",
       description:
-        "Access high-end camping, cycling, water sports, and fitness equipment without the steep upfront purchase costs.",
+        "Access high-end camping, cycling, water sports, and fitness equipment without steep upfront costs.",
     },
     {
       icon: ShieldCheck,
       title: "Verified Quality & Safety",
       description:
-        "Every gear listing undergo verification by trusted providers to ensure safety and peak condition before every rental.",
+        "Every item undergoes verification by trusted providers to ensure safety and peak condition.",
     },
     {
       icon: HeartHandshake,
-      title: "Empowering Local Providers",
+      title: "Empowering Providers",
       description:
-        "Turn unused gear into earnings. We provide local outdoor shops and gear owners a seamless rental management platform.",
+        "Turn unused gear into earnings with our seamless, provider-friendly rental platform.",
     },
     {
       icon: Truck,
-      title: "Hassle-free Pickups & Returns",
+      title: "Hassle-Free Rentals",
       description:
-        "Flexible dates, transparent rental durations, and automated order updates keep your adventures running smoothly.",
+        "Flexible dates, transparent rental durations, and automated updates keep adventures smooth.",
     },
   ];
 
@@ -66,146 +66,150 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="space-y-16 pb-16">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden rounded-3xl bg-muted/40 border border-border/50 py-16 px-6 sm:px-12 text-center lg:text-left">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 px-3 py-1 text-xs uppercase tracking-wider font-semibold">
-              <Sparkles className="w-3.5 h-3.5 mr-1.5 inline" /> Reimagining
-              Outdoor Rentals
-            </Badge>
-            <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground leading-tight">
-              Gear Up for Your Next Adventure{" "}
-              <span className="text-primary">Without Limits.</span>
-            </h1>
-            <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
-              GearUp connects thrill-seekers with top-tier sports and outdoor
-              equipment. Whether you're scaling a peak, camping under the stars,
-              or cycling new trails, we make premium gear accessible,
-              affordable, and instant.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
-              <Button size="lg" asChild className="gap-2 shadow-md">
-                <Link href="/gear">
-                  Explore All Gear <ArrowRight className="w-4 h-4" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <Link href="/register">Become a Provider</Link>
-              </Button>
-            </div>
-          </div>
+    <div className="container mx-auto px-4 py-8 space-y-12 md:space-y-16">
+      {/* 🌟 Header & Hero Section (Consistent with Gear Page Header Style) */}
+      <section className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+        <div className="space-y-4 lg:max-w-xl">
+          <Badge
+            variant="outline"
+            className="border-primary/20 bg-primary/10 text-primary px-3 py-1 text-xs font-semibold tracking-wide"
+          >
+            <Sparkles className="mr-1.5 inline-block h-3.5 w-3.5" />
+            Reimagining Outdoor Rentals
+          </Badge>
 
-          {/* Hero Image Showcase */}
-          <div className="relative mx-auto lg:ml-auto w-full max-w-md lg:max-w-none aspect-4/3 rounded-2xl overflow-hidden border border-border/80 shadow-xl">
-            <Image
-              src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1200&auto=format&fit=crop"
-              alt="Outdoor Camping and Gear"
-              fill
-              className="object-cover"
-              priority
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent flex items-end p-6">
-              <p className="text-white text-sm font-medium">
-                "Rent top-quality gear anytime, anywhere."
+          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl">
+            Gear Up for Your Next Adventure{" "}
+            <span className="text-primary">Without Limits.</span>
+          </h1>
+
+          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+            GearUp connects thrill-seekers with top-tier sports and outdoor
+            equipment. Whether you&apos;re scaling a peak, camping under the stars,
+            or cycling new trails, we make premium gear accessible and
+            affordable.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+            <Button size="lg" asChild className="gap-2 shadow-sm font-medium">
+              <Link href="/gear">
+                Explore Gear Catalog <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <Link href="/register">Become a Provider</Link>
+            </Button>
+          </div>
+        </div>
+
+        {/* Hero Image Showcase */}
+        <div className="relative w-full lg:max-w-lg aspect-4/3 overflow-hidden rounded-2xl border border-border shadow-md">
+          <Image
+            src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1200&auto=format&fit=crop"
+            alt="Outdoor Camping and Gear"
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-linear-to-t from-background/90 via-background/20 to-transparent flex items-end p-6">
+            <p className="text-xs sm:text-sm font-medium text-foreground">
+              Rent top-quality gear anytime, anywhere.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 📊 Impact Stats */}
+      <section className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        {stats.map((stat, index) => (
+          <Card
+            key={index}
+            className="border-border/60 bg-card/50 shadow-none transition-colors hover:border-border"
+          >
+            <CardContent className="p-4 sm:p-6 text-center">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-primary">
+                {stat.value}
+              </div>
+              <p className="mt-1 text-xs sm:text-sm font-medium text-muted-foreground">
+                {stat.label}
               </p>
-            </div>
+            </CardContent>
+          </Card>
+        ))}
+      </section>
+
+      {/* 🎯 Our Mission Section */}
+      <section className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center">
+        <div className="relative aspect-video lg:aspect-square w-full overflow-hidden rounded-2xl border border-border/60 shadow-md">
+          <Image
+            src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?q=80&w=1200&auto=format&fit=crop"
+            alt="Skiing and Winter Sports Gear"
+            fill
+            className="object-cover"
+          />
+        </div>
+
+        <div className="space-y-5">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
+            <Trophy className="h-4 w-4" />
+            <span>Our Mission</span>
+          </div>
+
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+            Making Sports & Outdoor Equipment Accessible to Everyone
+          </h2>
+
+          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+            Buying expensive equipment for seasonal sports or one-off trips
+            often leads to crowded closets and unnecessary costs. GearUp is
+            designed to change that.
+          </p>
+
+          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+            We offer a shared platform where customers get flexible access to
+            high-grade equipment, and providers build thriving local rental
+            businesses.
+          </p>
+
+          {/* Value Checklist */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            {teamValues.map((value, idx) => (
+              <div key={idx} className="flex items-center gap-2.5">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+                <span className="text-xs sm:text-sm font-medium text-foreground">
+                  {value}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Impact Numbers / Stats */}
-      <section className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-          {stats.map((stat, index) => (
-            <Card
-              key={index}
-              className="border border-border/60 shadow-xs text-center"
-            >
-              <CardContent className="p-6">
-                <div className="text-3xl sm:text-4xl font-black text-primary">
-                  {stat.value}
-                </div>
-                <p className="text-xs sm:text-sm font-medium text-muted-foreground mt-1">
-                  {stat.label}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* Our Mission & Story */}
-      <section className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="relative aspect-square sm:aspect-16/10 lg:aspect-square rounded-2xl overflow-hidden border border-border/60 shadow-lg order-2 lg:order-1">
-            <Image
-              src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?q=80&w=1200&auto=format&fit=crop"
-              alt="Skiing and Winter Sports Gear"
-              fill
-              className="object-cover"
-            />
-          </div>
-
-          <div className="space-y-6 order-1 lg:order-2">
-            <div className="flex items-center gap-2 text-primary font-semibold text-sm">
-              <Trophy className="w-4 h-4" />
-              <span>Our Mission</span>
-            </div>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground">
-              Making Sports & Outdoor Adventures Accessible to Everyone
-            </h2>
-            <p className="text-muted-foreground leading-relaxed">
-              Buying expensive equipment for seasonal sports or one-off trips
-              often leads to crowded closets and wasted money. GearUp was built
-              to break that cycle.
-            </p>
-            <p className="text-muted-foreground leading-relaxed">
-              We provide a seamless multi-role ecosystem where **Customers** get
-              flexible access to high-grade equipment, and **Providers** build
-              thriving rental businesses.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-              {teamValues.map((value, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span className="text-xs font-semibold text-foreground">
-                    {value}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Choose GearUp */}
-      <section className="max-w-6xl mx-auto px-4 space-y-10">
-        <div className="text-center max-w-2xl mx-auto space-y-3">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">
+      {/* 🎛️ Why Choose GearUp (Cards matching UI style) */}
+      <section className="space-y-6">
+        <div className="max-w-xl space-y-2">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
             Why Adventurers Choose GearUp
           </h2>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             Everything you need for a smooth, reliable, and secure rental
             experience.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((feature, idx) => {
             const Icon = feature.icon;
             return (
               <Card
                 key={idx}
-                className="border border-border/60 shadow-xs hover:border-primary/40 transition-colors"
+                className="border-border/60 bg-card hover:border-primary/50 transition-all duration-200"
               >
-                <CardContent className="p-6 space-y-4">
-                  <div className="p-3 w-fit rounded-xl bg-primary/10 text-primary">
-                    <Icon className="w-6 h-6" />
+                <CardContent className="p-5 space-y-3">
+                  <div className="p-2.5 w-fit rounded-lg bg-primary/10 text-primary">
+                    <Icon className="h-5 w-5" />
                   </div>
-                  <h3 className="font-semibold text-base text-foreground">
+                  <h3 className="font-semibold text-sm sm:text-base text-foreground">
                     {feature.title}
                   </h3>
                   <p className="text-xs text-muted-foreground leading-relaxed">
@@ -218,98 +222,95 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* How It Works Overview */}
-      <section className="max-w-6xl mx-auto px-4">
-        <div className="rounded-3xl bg-muted/30 border border-border/60 p-8 sm:p-12 space-y-8">
-          <div className="text-center max-w-xl mx-auto space-y-2">
-            <Badge variant="outline" className="border-primary/30 text-primary">
-              Ecosystem
-            </Badge>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-              Built for Adventurers & Equipment Owners
-            </h2>
-          </div>
+      {/* 📦 Ecosystem Overview (Dual Role Cards) */}
+      <section className="rounded-2xl border border-border/60 bg-muted/20 p-6 sm:p-8 md:p-10 space-y-8">
+        <div className="text-center max-w-xl mx-auto space-y-2">
+          <Badge
+            variant="outline"
+            className="border-primary/20 text-primary text-xs"
+          >
+            Platform Ecosystem
+          </Badge>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            Built for Adventurers & Equipment Owners
+          </h2>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Customer Box */}
-            <div className="bg-card p-6 sm:p-8 rounded-2xl border border-border/50 space-y-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {/* Customers */}
+          <div className="flex flex-col justify-between rounded-xl border border-border bg-card p-6 shadow-xs space-y-6">
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-primary uppercase tracking-widest">
+                <span className="text-xs font-bold text-primary tracking-wider uppercase">
                   For Customers
                 </span>
-                <Users className="w-5 h-5 text-muted-foreground" />
+                <Users className="h-5 w-5 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-bold">Rent in 3 Simple Steps</h3>
-              <ul className="space-y-3 text-xs text-muted-foreground">
-                <li className="flex items-start gap-2">
+              <h3 className="text-lg font-bold">Rent Gear in 3 Easy Steps</h3>
+              <ul className="space-y-3 text-xs sm:text-sm text-muted-foreground">
+                <li className="flex items-start gap-2.5">
                   <span className="font-bold text-foreground">1.</span> Search
-                  and select your preferred dates.
+                  gear and pick your rental dates.
                 </li>
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2.5">
                   <span className="font-bold text-foreground">2.</span> Pay
                   securely via Stripe or SSLCommerz.
                 </li>
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2.5">
                   <span className="font-bold text-foreground">3.</span> Pick up
-                  your gear, enjoy your trip, and return.
+                  your equipment and hit the trails.
                 </li>
               </ul>
-              <Button size="sm" className="w-full mt-2" asChild>
-                <Link href="/gear">Browse Catalogue</Link>
-              </Button>
             </div>
+          </div>
 
-            {/* Provider Box */}
-            <div className="bg-card p-6 sm:p-8 rounded-2xl border border-border/50 space-y-4">
+          {/* Providers */}
+          <div className="flex flex-col justify-between rounded-xl border border-border bg-card p-6 shadow-xs space-y-6">
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
-                  For Providers
+                <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 tracking-wider uppercase">
+                  For Equipment Owners
                 </span>
-                <ShieldCheck className="w-5 h-5 text-muted-foreground" />
+                <ShieldCheck className="h-5 w-5 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-bold">Monetize Your Equipment</h3>
-              <ul className="space-y-3 text-xs text-muted-foreground">
-                <li className="flex items-start gap-2">
+              <h3 className="text-lg font-bold">Monetize Your Equipment</h3>
+              <ul className="space-y-3 text-xs sm:text-sm text-muted-foreground">
+                <li className="flex items-start gap-2.5">
                   <span className="font-bold text-foreground">1.</span> List
-                  sports gear with pricing & availability.
+                  items with custom prices and availability.
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="font-bold text-foreground">2.</span> Confirm
-                  orders and track rental inventory.
+                <li className="flex items-start gap-2.5">
+                  <span className="font-bold text-foreground">2.</span> Manage
+                  incoming orders and rental schedules.
                 </li>
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2.5">
                   <span className="font-bold text-foreground">3.</span> Receive
-                  payouts safely directly to your account.
+                  payouts directly to your account.
                 </li>
               </ul>
-              <Button
-                size="sm"
-                variant="secondary"
-                className="w-full mt-2"
-                asChild
-              >
-                <Link href="/register">Start Renting Out</Link>
-              </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Call to Action Banner */}
-      <section className="max-w-6xl mx-auto px-4">
-        <div className="rounded-3xl bg-primary text-primary-foreground p-8 sm:p-12 text-center space-y-6 shadow-xl">
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-            Ready to Start Your Journey?
-          </h2>
-          <p className="max-w-xl mx-auto text-primary-foreground/80 text-sm sm:text-base">
-            Join thousands of outdoors enthusiasts and equipment providers using
-            GearUp today.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4 pt-2">
-            <Button size="lg" variant="secondary" asChild className="font-bold">
-              <Link href="/gears">Explore Available Gear</Link>
-            </Button>
-          </div>
+      {/* 🚀 Call to Action Footer Box */}
+      <section className="rounded-2xl bg-primary text-primary-foreground p-8 sm:p-10 text-center space-y-5 shadow-lg">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+          Ready to Start Your Next Adventure?
+        </h2>
+        <p className="max-w-md mx-auto text-primary-foreground/80 text-xs sm:text-sm">
+          Join thousands of outdoor enthusiasts and verified providers using
+          GearUp today.
+        </p>
+        <div className="pt-2">
+          <Button
+            size="lg"
+            variant="secondary"
+            asChild
+            className="font-semibold shadow-xs"
+          >
+            <Link href="/gear">Explore Available Gear</Link>
+          </Button>
         </div>
       </section>
     </div>

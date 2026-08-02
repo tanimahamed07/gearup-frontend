@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Dumbbell } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -10,15 +10,20 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand Section */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <span className="text-xl font-bold">G</span>
+            <Link
+              href="/"
+              className="flex items-center gap-2 transition-transform hover:scale-105 w-fit"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md">
+                <Dumbbell className="h-6 w-6 stroke-[2.5]" />
               </div>
-              <span className="text-xl font-bold">GearUp</span>
-            </div>
+              <span className="text-2xl font-black tracking-tight text-foreground">
+                Gear<span className="text-primary">Up</span>
+              </span>
+            </Link>
             <p className="text-sm text-muted-foreground">
-              Your trusted platform for renting premium gym and fitness
-              equipment. Get fit without breaking the bank.
+              Your trusted platform for renting premium gear and fitness
+              equipment. Get the tools you need without breaking the bank.
             </p>
             <div className="flex gap-3">
               <Link
@@ -131,31 +136,23 @@ export default function Footer() {
                   href="/gears"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Browse Gear
+                  Browse Gears
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/about"
+                  href="/login"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  About Us
+                  Login
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/how-it-works"
+                  href="/register"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  How It Works
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/pricing"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Pricing
+                  Register
                 </Link>
               </li>
             </ul>
@@ -164,47 +161,31 @@ export default function Footer() {
           {/* Support */}
           <div className="space-y-4">
             <h3 className="text-sm font-semibold uppercase tracking-wider">
-              Support
+              For Providers
             </h3>
             <ul className="space-y-2.5">
               <li>
                 <Link
-                  href="/help"
+                  href="/provider-dashboard"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Help Center
+                  Provider Dashboard
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/contact"
+                  href="/provider-dashboard/gears"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Contact Us
+                  My Gears
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/faq"
+                  href="/register"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  FAQs
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/terms"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/privacy"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Privacy Policy
+                  Become a Provider
                 </Link>
               </li>
             </ul>
@@ -218,11 +199,11 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start gap-2.5 text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4 mt-0.5 shrink-0" />
-                <span>123 Fitness Street, Gym District, NY 10001</span>
+                <span>Dhaka, Bangladesh</span>
               </li>
               <li className="flex items-center gap-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
                 <Phone className="h-4 w-4 shrink-0" />
-                <a href="tel:+1234567890">+1 (234) 567-890</a>
+                <a href="tel:+8801234567890">+880 1234-567890</a>
               </li>
               <li className="flex items-center gap-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
                 <Mail className="h-4 w-4 shrink-0" />
@@ -231,7 +212,7 @@ export default function Footer() {
             </ul>
             <div className="pt-2">
               <p className="text-xs text-muted-foreground">
-                Available Mon-Fri, 9am-6pm EST
+                Available 24/7 for your support
               </p>
             </div>
           </div>
@@ -245,22 +226,22 @@ export default function Footer() {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-6">
               <Link
-                href="/sitemap"
+                href="/gears"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                Sitemap
+                Browse Gears
               </Link>
               <Link
-                href="/accessibility"
+                href="/login"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                Accessibility
+                Sign In
               </Link>
               <Link
-                href="/cookies"
+                href="/register"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                Cookie Policy
+                Get Started
               </Link>
             </div>
           </div>

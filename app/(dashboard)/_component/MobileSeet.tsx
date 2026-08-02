@@ -1,6 +1,22 @@
-import { Dumbbell, Home, Menu } from "lucide-react";
+"use client";
+
+import {
+  Dumbbell,
+  Home,
+  Menu,
+  LayoutDashboard,
+  ShoppingBag,
+  CreditCard,
+  Settings,
+  Package,
+  Users,
+  FolderTree,
+  LucideIcon,
+  LogOut,
+} from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -10,14 +26,32 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ISidebarItem } from "@/lib/types/types";
 import { UserRole } from "../layout";
 import { UserData } from "@/components/shared/navbar";
+import { logout } from "@/service/logout";
+import { toast } from "sonner";
+
+// Icon mapping
+const iconMap: Record<string, LucideIcon> = {
+  LayoutDashboard,
+  ShoppingBag,
+  CreditCard,
+  Settings,
+  Package,
+  Users,
+  FolderTree,
+};
+
+interface NavItem {
+  name: string;
+  href: string;
+  iconName: string;
+}
 
 interface MobileSheetProps {
   user: UserData;
   role: UserRole;
-  navItems: ISidebarItem[];
+  navItems: NavItem[];
   userInitials: string;
 }
 
@@ -27,8 +61,18 @@ export default function MobileSeet({
   navItems,
   userInitials,
 }: MobileSheetProps) {
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    setOpen(false);
+    await logout();
+    toast.success("User Logged Out Successfully!");
+    router.push("/login");
+  };
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button variant="outline" size="icon" className="h-9 w-9">
           <Menu className="h-5 w-5" />
@@ -52,20 +96,25 @@ export default function MobileSeet({
           <div className="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
             Menu
           </div>
-          {navItems.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-md text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-            >
-              <item.icon className="h-4 w-4" />
-              {item.name}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const IconComponent = iconMap[item.iconName] || LayoutDashboard;
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-md text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+              >
+                <IconComponent className="h-4 w-4" />
+                {item.name}
+              </Link>
+            );
+          })}
 
           <div className="pt-4 mt-4 border-t border-border/40">
             <Link
               href="/gears"
+              onClick={() => setOpen(false)}
               className="flex items-center gap-3 px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
               <Home className="h-4 w-4" /> Back to Main Site
@@ -74,7 +123,7 @@ export default function MobileSeet({
         </div>
 
         {/* User Card at Bottom */}
-        <div className="p-4 border-t border-border/60 bg-muted/20">
+        <div className="p-4 border-t border-border/60 bg-muted/20 space-y-3">
           <div className="flex items-center gap-3 p-2 rounded-xl bg-card border border-border/40 shadow-xs">
             <Avatar className="h-9 w-9 ring-2 ring-primary/20">
               <AvatarFallback className="bg-primary/10 text-primary font-bold">
@@ -90,6 +139,16 @@ export default function MobileSeet({
               </span>
             </div>
           </div>
+
+          {/* Logout Button */}
+          <Button
+            onClick={handleLogout}
+            variant="destructive"
+            className="w-full justify-start text-sm"
+            size="sm"
+          >
+            <LogOut className="mr-2 h-4 w-4" /> Logout
+          </Button>
         </div>
       </SheetContent>
     </Sheet>
