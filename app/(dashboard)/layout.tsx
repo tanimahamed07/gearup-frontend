@@ -1,11 +1,11 @@
-import React, { Suspense } from "react";
-import Link from "next/link";
+import React from "react";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { getMe } from "@/service/getMe";
 
 import Sidebar from "./_component/Sidebar";
 import DashboardHeader from "./_component/DashboardHeader";
 import { sidebarMenuItems } from "./_config/customerSidebarItems";
-import DashboardLoading from "./admin-dashboard/loading";
 
 // Types
 export type UserRole = "CUSTOMER" | "PROVIDER" | "ADMIN";
@@ -19,6 +19,14 @@ export default async function DashboardLayout({
 
   // Extract user data
   const user = userResponse?.data || null;
+
+  // Check if user is suspended - log them out immediately
+  if (user && user.status === "SUSPENDED") {
+    const cookieStore = await cookies();
+    cookieStore.delete("accessToken");
+    cookieStore.delete("refreshToken");
+    redirect("/login?suspended=true");
+  }
 
   // Calculate user role
   const role: UserRole = user?.role as UserRole;

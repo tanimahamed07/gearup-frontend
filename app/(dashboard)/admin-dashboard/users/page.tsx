@@ -38,7 +38,6 @@ export default async function UserManagementPage() {
   const result = await getAllUsers();
   const users: IUser[] = result?.data || [];
 
-
   // Role Badge Helper
   const getRoleBadge = (role: IUser["role"]) => {
     switch (role) {
@@ -80,7 +79,6 @@ export default async function UserManagementPage() {
           </p>
         </div>
       </div>
-
 
       {/* Main Users Table Card */}
       <Card className="border border-border/60 shadow-sm rounded-xl overflow-hidden bg-card">

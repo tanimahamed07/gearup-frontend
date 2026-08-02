@@ -7,9 +7,8 @@ import { jwtUtils } from "./utils/jwt";
 import { getNewAccessToken } from "./service/refreshToken";
 
 const AUTH_ROUTES = ["/login", "/register"];
-const PUBLIC_ROUTES = ["/", "/gears"];
+const PUBLIC_ROUTES = ["/", "/gears", "/about"];
 
-// This function can be marked `async` if using `await` inside
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
@@ -51,14 +50,59 @@ export async function proxy(request: NextRequest) {
   }
 
   let userRole = null;
+  let userStatus = null;
 
   if (!decodedAccessToken?.success) {
     // Token has expired or is invalid, clear the cookies
     cookieStore.delete("accessToken");
+  } else if (decodedAccessToken.data) {
+    const payload = decodedAccessToken.data as JwtPayload;
+
+    console.log("=========>>>>>> JWT Payload:", payload);
+    userRole = payload.role;
+    userStatus = payload.status;
+
+    // ALWAYS fetch user status from API since it's not in the token
+    // This ensures we have the latest status even if user was suspended after token was issued
+    if (accessToken) {
+      try {
+        const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/me`, {
+          headers: {
+            Cookie: `accessToken=${accessToken}`,
+          },
+          cache: "no-store",
+        });
+
+        if (res.ok) {
+          const userData = await res.json();
+          console.log("=========>>>>>> API Response:", userData);
+
+          // Handle different response structures
+          if (userData?.data?.status) {
+            userStatus = userData.data.status;
+          } else if (userData?.status) {
+            userStatus = userData.status;
+          }
+
+          console.log("=========>>>>>> User Status:", userStatus);
+        } else {
+          console.error("Failed to fetch user data, status:", res.status);
+        }
+      } catch (error) {
+        // If API call fails, log the error but continue
+        console.error("Failed to fetch user status:", error);
+      }
+    }
   }
 
-  if (decodedAccessToken?.success && decodedAccessToken.data) {
-    userRole = (decodedAccessToken.data as JwtPayload).role;
+  // 🔴 Handle Suspended User - Check after we have the status
+  if (userStatus === "SUSPENDED") {
+    cookieStore.delete("accessToken");
+    cookieStore.delete("refreshToken");
+
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("suspended", "true");
+    return NextResponse.redirect(loginUrl);
   }
 
   // User is logged in and trying to access login or register page, redirect to appropriate dashboard

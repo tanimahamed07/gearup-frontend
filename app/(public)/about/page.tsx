@@ -85,8 +85,8 @@ export default function AboutPage() {
 
           <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
             GearUp connects thrill-seekers with top-tier sports and outdoor
-            equipment. Whether you&apos;re scaling a peak, camping under the stars,
-            or cycling new trails, we make premium gear accessible and
+            equipment. Whether you&apos;re scaling a peak, camping under the
+            stars, or cycling new trails, we make premium gear accessible and
             affordable.
           </p>
 

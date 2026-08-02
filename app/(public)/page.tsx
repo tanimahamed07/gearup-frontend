@@ -273,7 +273,7 @@ export default async function HomePage() {
               return (
                 <Link
                   key={idx}
-                  href={`/gear?category=${cat.name}`}
+                  href={`/gears?category=${cat.name}`}
                   className="group p-4 sm:p-5 rounded-xl border border-border/60 bg-card hover:bg-muted/40 hover:border-primary/50 transition-all duration-200 text-center flex flex-col items-center gap-3 shadow-2xs"
                 >
                   <div className="p-3 rounded-full bg-primary/10 text-primary group-hover:scale-110 transition-transform">
@@ -312,7 +312,7 @@ export default async function HomePage() {
               asChild
               className="gap-2 w-fit text-xs sm:text-sm"
             >
-              <Link href="/gear">
+              <Link href="/gears">
                 View All Gear <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
@@ -390,10 +390,7 @@ export default async function HomePage() {
               today.
             </p>
           </div>
-          <span
-           
-            className="w-full sm:w-auto font-semibold shrink-0"
-          >
+          <span className="w-full sm:w-auto font-semibold shrink-0">
             Become a Provider
           </span>
         </section>

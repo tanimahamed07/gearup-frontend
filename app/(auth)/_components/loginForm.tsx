@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, startTransition } from "react";
+import { useState, startTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Loader2, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { loginSchema, type LoginFormData } from "@/lib/validations/auth.schema";
 import { loginAction } from "../_action/authAction";
@@ -17,6 +17,7 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "";
+  const isSuspended = searchParams.get("suspended") === "true";
 
   const {
     register,
@@ -53,6 +54,22 @@ export default function LoginForm() {
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Suspended Account Warning */}
+        {isSuspended && (
+          <div className="p-3 rounded-md bg-destructive/10 border border-destructive/20 flex items-start gap-2">
+            <AlertTriangle className="h-5 w-5 text-destructive mt-0.5 shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-destructive">
+                Account Suspended
+              </p>
+              <p className="text-xs text-destructive/90 mt-1">
+                Your account has been suspended. Please contact support for
+                assistance.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Error Message */}
         {state && !state.success && state.message && (
           <div className="p-3 rounded-md bg-destructive/10 border border-destructive/20 text-destructive text-sm">

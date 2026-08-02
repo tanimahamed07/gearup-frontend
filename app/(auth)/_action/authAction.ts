@@ -45,6 +45,18 @@ export const loginAction = async (
   const result = await res.json();
 
   if (result.success) {
+    // Check if user account is suspended
+    const decodedToken = jwt.decode(result.data.accessToken) as JwtPayload;
+
+    if (decodedToken?.status === "SUSPENDED") {
+      return {
+        success: false,
+        statusCode: 403,
+        message: "Your account has been suspended. Please contact support.",
+        data: { accessToken: "", refreshToken: "" },
+      };
+    }
+
     const cookieStore = await cookies();
 
     cookieStore.set("accessToken", result.data.accessToken, {
@@ -58,8 +70,6 @@ export const loginAction = async (
       sameSite: "lax",
     });
 
-    const decodedToken = jwt.decode(result.data.accessToken) as JwtPayload;
-
     if (
       redirectTo &&
       typeof redirectTo === "string" &&
@@ -69,16 +79,7 @@ export const loginAction = async (
       redirect(redirectTo);
     }
 
-    if (decodedToken) {
-      redirect("/");
-    }
-    // if (decodedToken.role === "CUSTOMER") {
-    //   redirect("/customer");
-    // } else if (decodedToken.role === "PROVIDER") {
-    //   redirect("/provider");
-    // } else if (decodedToken.role === "ADMIN") {
-    //   redirect("/admin");
-    // }
+    redirect("/");
   }
 
   return result;
